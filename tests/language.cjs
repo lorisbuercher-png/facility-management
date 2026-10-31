@@ -1,0 +1,8 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const catalog=JSON.parse(fs.readFileSync('public/i18n/catalog.json','utf8')),source=fs.readFileSync('public/language.js','utf8');
+const fn=source.slice(source.indexOf(' function translate('),source.indexOf('\n function menu('));const c={locale:'fr',window:{FACILITY_TRANSLATIONS:catalog},Set};vm.createContext(c);vm.runInContext(fn,c);
+assert.equal(c.translate('Gemeldet'),'Signalé');assert.equal(c.translate('Freigeben ✓'),'Approuver ✓');assert.equal(c.translate('12 offene Arbeiten'),'12 travaux ouverts');assert.equal(c.translate('Gemeldet',new Set(['Gemeldet'])),'Gemeldet','user content is preserved');c.locale='it';assert.equal(c.translate('Gemeldet'),'Segnalato');assert.equal(c.translate('Termin freigeben'),'Confermare la data');c.locale='de';assert.equal(c.translate('Gemeldet'),'Gemeldet');
+assert.deepEqual(Object.keys(catalog.fr).sort(),Object.keys(catalog.it).sort());for(const lang of ['fr','it'])for(const value of Object.values(catalog[lang]))assert.equal(typeof value,'string');
+for(const file of ['app/shell.ts','app/landing.ts','public/demo.html'])assert(fs.readFileSync(file,'utf8').includes('/language.js'));
+assert(source.includes("parent.setAttribute('value',source)"),'translated status options keep their internal value');assert(source.includes("document.documentElement.lang=locale"));assert(source.includes("localStorage.setItem(KEY,locale)"));
+console.log('PASS: FR/IT catalog parity, core workflow labels, original user content, DE fallback, numeric labels, stable status option values, menu entry points');

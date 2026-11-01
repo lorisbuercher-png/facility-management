@@ -1,0 +1,68 @@
+name: Facility Demo veröffentlichen
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      - name: Demo vorbereiten
+        env:
+          REPOSITORY: ${{ github.event.repository.name }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import shutil
+          from pathlib import Path
+
+          source = Path("public")
+          target = Path("_site")
+          shutil.copytree(source, target)
+          base = "/" + os.environ["REPOSITORY"] + "/"
+
+          names = sorted(
+              [p.name for p in source.iterdir() if p.is_file()],
+              key=len,
+              reverse=True
+          )
+
+          for path in target.rglob("*"):
+              if path.suffix not in {".html", ".js", ".css", ".json"}:
+                  continue
+              text = path.read_text()
+              for name in names:
+                  text = text.replace("/" + name, base + name)
+              text = text.replace("/assets/", base + "assets/")
+              text = text.replace('href="/"', 'href="' + base + '"')
+              path.write_text(text)
+
+          shutil.copyfile(target / "demo.html", target / "index.html")
+          (target / ".nojekyll").touch()
+          PY
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Demo veröffentlichen
+        id: deployment
+        uses: actions/deploy-pages@v4

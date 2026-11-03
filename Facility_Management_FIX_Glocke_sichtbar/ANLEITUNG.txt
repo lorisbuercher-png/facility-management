@@ -1,0 +1,18 @@
+# Facility Management – Glocke sichtbar machen
+
+Dieses kleine ZIP enthält **nur 4 zu ersetzende Dateien**. Die bestehende App bleibt erhalten.
+
+- `app/shell.ts` – Glocke mit sichtbarem Text „Mitteilungen“ im echten Dashboard.
+- `public/demo.html` – derselbe sichtbare Einstieg in der Demo.
+- `public/notifications.js` – Notification-Client und Fallback für ältere Dashboard-Vorlagen.
+- `public/notifications.css` – sichtbarer Button für Desktop, Glocke auf Mobilgeräten.
+
+## Einbau
+1. ZIP entpacken.
+2. Diese 4 Dateien in deinem GitHub-Repository **unter exakt denselben Pfaden ersetzen** (nicht zusätzlich in einen Unterordner hochladen).
+3. Änderungen committen und sicherstellen, dass die Website eine **neue Bereitstellung/Deployment** startet.
+4. Website im Dashboard öffnen (nicht nur die Landingpage) und auf dem Mac im Browser `Cmd + Shift + R` zum Neuladen versuchen.
+
+Falls die Glocke weiterhin fehlt, bitte die Website-URL und einen Screenshot des Dashboards schicken. GitHub allein führt den neuen Code nicht automatisch aus; das Hosting muss die Änderungen bereitstellen.
+
+**Hinweis:** Diese Dateien machen die Glocke sichtbar. Die Benachrichtigungs-API (`app/api/notifications/route.ts`) und Datenbankmigration (`drizzle/0003_notifications.sql`) aus dem vorherigen Update bleiben zusätzlich erforderlich, damit echte Meldungen erscheinen.

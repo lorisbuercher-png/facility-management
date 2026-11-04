@@ -34,8 +34,11 @@ export function applyWorkflow(state:any,input:any,user:Principal,now:string,id:s
   if(user.role!=='manager')return fail('Nur der zuständige Manager darf Termine freigeben.',403);
   if(effectiveStatus(t)!=='Freigegeben')return fail('Termine können nur für freigegebene Arbeiten bestätigt werden.',409);
   if(!text(input.due,10,true)||!/^\d{4}-\d{2}-\d{2}$/.test(input.due)||Number.isNaN(Date.parse(input.due))||new Date(input.due+'T12:00:00Z').toISOString().slice(0,10)!==input.due)return fail('Bitte ein gültiges Termindatum wählen.');
+  if(input.startTime!==undefined&&input.startTime!==''&&(typeof input.startTime!=='string'||!/^([01]\d|2[0-3]):[0-5]\d$/.test(input.startTime)))return fail('Bitte eine gültige Startzeit eingeben.');
+  const minutes=input.durationMinutes===''||input.durationMinutes===undefined?null:Number(input.durationMinutes);
+  if(minutes!==null&&(!Number.isInteger(minutes)||minutes<15||minutes>720))return fail('Geplante Dauer: 15 bis 720 Minuten.');
   if(!text(input.note??'',2000))return fail('Bitte die Terminnotiz prüfen.');
-  note=[input.due,(input.note||'').trim()].filter(Boolean).join(' · ');target.due=input.due;target.scheduleApproval={date:input.due,at:now,userId:user.id,userName:user.name};actionLabel='Termin freigegeben';
+  note=[input.due,input.startTime||'',(input.note||'').trim()].filter(Boolean).join(' · ');target.due=input.due;target.startTime=input.startTime||'';target.durationMinutes=minutes;target.scheduleApproval={date:input.due,startTime:target.startTime,durationMinutes:minutes,at:now,userId:user.id,userName:user.name};actionLabel='Termin freigegeben';
  }else{
   if(user.role!=='employee')return fail('Nur Mitarbeiter dürfen freigegebene Arbeiten abschliessen.',403);
   if(effectiveStatus(t)!=='Freigegeben')return fail('Nur freigegebene Arbeiten können abgeschlossen werden.',409);

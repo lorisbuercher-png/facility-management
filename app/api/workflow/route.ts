@@ -2,6 +2,7 @@ import { env } from 'cloudflare:workers';
 import { roleFromIdentity,type Grant } from '../../access';
 import { applyWorkflow,type Principal } from '../../workflow';
 import { readWorkflowInput,photoType } from '../../photos';
+import { workflowNotifications,storeNotifications,type NotificationRecipient } from '../../notifications';
 export const dynamic='force-dynamic';
 const reply=(body:unknown,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 export async function POST(request:Request){
@@ -46,5 +47,12 @@ export async function POST(request:Request){
   return reply({error:'Speicherergebnis unklar. Bitte Daten aktualisieren und vor erneutem Absenden prüfen.'},503)
  }
  if(saved.meta.changes!==1){if(bucket)await Promise.all(uploaded.map(key=>bucket.delete(key)));return reply({error:'Daten oder Zugangsberechtigung inzwischen geändert. Bitte aktualisieren und erneut versuchen.'},409)}
+ // Notify only after a committed workflow transition. Notifications are server-routed by real team grants.
+ // Failure must not roll back a valid report, photo or job; the source-of-truth stays in its job history.
+ try{
+  const team=await env.DB.prepare('SELECT email,name,role,company_id,location_id,active FROM team_access WHERE owner_id = ? AND active = 1').bind(user.ownerId).all<NotificationRecipient>();
+  const recipients=workflowNotifications(input.action,{ownerEmail:(env as any).FACILITY_ADMIN_EMAIL,companyId:input.companyId,locationId:task.locationId,taskId:result.taskId,actorEmail:user.email},task,team.results);
+  await storeNotifications(env.DB,user.ownerId,recipients,now);
+ }catch(e){console.error('Notification delivery could not be queued:',e instanceof Error?e.message:'unknown');}
  return reply({ok:true,taskId:result.taskId});
 }

@@ -5,7 +5,7 @@
  if(!user||!['manager','branch'].includes(user.role))return;
  const currentTenant=tenant,previousDraw=drawWorkspace;
  const assignedCompany=()=>data.companies.find(c=>c.id===user.companyId);
- const tabs=()=>{const c=assignedCompany();if(user.role==='branch')return [['dashboard','home','Meine Filiale'],...(c?.modules.includes('Mängel & Aufträge')?[['tasks','tasks','Meine Mängel']]:[])];return [['dashboard','home','Dashboard'],...(c?.modules.includes('Standorte')?[['locations','pin','Filialen']]:[]),...(c?.modules.includes('Mängel & Aufträge')?[['tasks','tasks',user.role==='manager'?'Arbeiten aller Filialen':'Meine Mängel']]:[]),...(c?.modules.includes('Rapporte')?[['reports','tasks','Rapporte']]:[]),...(user.role==='manager'?[['branch-team','team','Filialleiter']]:[])];};
+ const tabs=()=>{const c=assignedCompany();if(user.role==='branch')return [['dashboard','home','Meine Filiale'],...(c?.modules.includes('Mängel & Aufträge')?[['tasks','tasks','Meine Mängel']]:[])];return [['dashboard','home','Dashboard'],...(c?.modules.includes('Standorte')?[['locations','pin','Filialen']]:[]),...(c?.modules.includes('Mängel & Aufträge')?[['tasks','tasks',user.role==='manager'?'Arbeiten aller Filialen':'Meine Mängel']]:[]),...(c?.modules.includes('Rapporte')?[['reports','tasks','Rapporte']]:[]),...(user.role==='manager'?[['project-status','home','Projektstand'],['record','home','Gebäudeakte'],['chat','team','Kundenchat'],['branch-team','team','Filialleiter']]:[])];};
  function unavailable(){workspaceId=null;$('#content').innerHTML='<section class="panel empty-state"><h2>Unternehmenszugang nicht verfügbar</h2><p>Deine Firmenzuordnung ist nicht mehr gültig. Bitte wende dich an die Plattformverwaltung.</p></section>';$('#heading').textContent='Dein Unternehmensbereich';$('#add').classList.add('hidden');$('.sidebar .nav').replaceChildren();}
  function openTab(tab='dashboard'){
   const c=assignedCompany();if(!c){unavailable();return;}
@@ -23,6 +23,7 @@
   if($('.member-notice'))$('.member-notice').textContent=scope;
   if($('.eyebrow'))$('.eyebrow').textContent='Dein Unternehmensdashboard';
   if($('footer span:first-child'))$('footer span:first-child').textContent=c.name+' · Gebäudeunterhalt';
+  if(workspaceTab==='dashboard'&&user.role==='manager'&&typeof window.renderManagerProjectPreview==='function')window.renderManagerProjectPreview(c,data.workspaces[c.id]);
   if(workspaceTab==='tasks'&&$('#workspace-content .section-title h2'))$('#workspace-content .section-title h2').textContent=user.role==='manager'?'Arbeiten aller Filialen':'Meine Mängel';
   $('#breadcrumb-current').textContent=c.name+' / '+(tabs().find(t=>t[0]===workspaceTab)?.[2]||'Dashboard');
   const search=$('#global-search');search.setAttribute('aria-label','Arbeiten der eigenen Firma suchen');search.placeholder='Arbeiten oder Filiale suchen …';

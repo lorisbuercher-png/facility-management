@@ -63,7 +63,7 @@ Die Tests prüfen Identität, Owner-/Tenant-/Filialgrenzen, widerrufenen Zugriff
 3. Die neue Manager-Verwaltung eigener Filialleiter ist technisch geprüft; vor dem Kundenstart zusätzlich mit echten Manager- und Filialleiter-Konten testen.
 4. Daten-/Dateisicherung, Wiederherstellung, Aufbewahrung, Löschkonzept und Betriebsüberwachung festlegen und praktisch testen.
 5. Relationale Aufgaben-/Rapporttabellen statt des Snapshot-Modells für grössere Datenmengen und Parallelität vorsehen.
-6. E-Mail-Benachrichtigungen, wiederkehrende Wartungen, Dokumentenablage und erweiterte Einsatz-/Terminplanung sind spätere Module. Modulschalter sind keine Behauptung, dass alle späteren Module bereits umgesetzt sind.
+6. Externe E-Mail-/Push-Benachrichtigungen, wiederkehrende Wartungen und Dokumentenablage sind spätere Module; interne App-Benachrichtigungen sind bereits als eigenes Modul vorhanden. Modulschalter sind keine Behauptung, dass alle späteren Module bereits umgesetzt sind. Modulschalter sind keine Behauptung, dass alle späteren Module bereits umgesetzt sind.
 7. Provider-HTTPS ist vorhanden; die umfassende Produktionsprüfung von Security-Headern, Rate-Limits und eigenständigem Login steht mit dem finalen Hosting/Auth-Aufbau noch aus.
 
 GitHub kann den Code versionieren, betreibt allein aber keine Datenbank-/Datei-/Auth-Plattform. Bei eigenem Cloudflare-Hosting müssen D1/R2 und Auth eingerichtet sowie Daten und Bilder migriert werden. Die aktuelle Website bleibt privat, bis der Inhaber eine Änderung der Freigabe ausdrücklich veranlasst.
@@ -113,3 +113,29 @@ Filialleitungen sehen ausschliesslich «Meine Filiale» und «Meine Mängel». D
 Der Manager überblickt und kontrolliert die Unterhaltsarbeiten der eigenen Firma. Er prüft Meldungen, gibt sie frei oder lehnt sie mit Begründung ab und bestätigt Ausführungstermine freigegebener Arbeiten. Das Melden oder allgemeine Bearbeiten von Mängeln ist für Manager auch serverseitig gesperrt. Die Terminfreigabe schreibt Datum, Benutzer und Zeitpunkt in den Verlauf, erhöht die Auftragsrevision und ändert den Arbeitsstatus nicht. Sie ist keine automatische Einsatzplanung oder Benachrichtigung.
 
 Die Plattform trägt auf Startseite und Anwendungsseiten den Hinweis «Facility Management – ein Produkt der Firma F&B Spezialbau». Die Fortschrittsanzeige heisst «Stand der Unterhaltsarbeiten».
+
+
+## Erweiterung 02.11.2026 · Gebäudeakte, Einsatzplanung, Kundenchat
+
+**Digitale Gebäudeakte:** Im Kundenmanager und Superadmin unter «Gebäudeakte». Jede Filiale besitzt ihre chronologisch geordnete Geschichte, die aus den protokollierten Statusänderungen der bestehenden Aufträge entsteht. Die Ansicht zeigt erledigte Arbeiten, offene Aufträge, Stunden, vorhandene Bilder und Links auf echte Rapporte. Es gibt keine doppelte manuelle Erfassung; alte Aufträge ohne History sind als unvollständige Bestandsdaten gekennzeichnet. Kosten werden ohne echte Preis-/Materialdaten ausdrücklich nicht erfunden.
+
+**Mitarbeiter-Tages- und Wochenplanung:** Menüeinträge «Mein Tag» und «Wochenplan» sowie die direkte Tagesübersicht auf dem Einsatzdashboard. Der Manager kann bei «Termin freigeben» ein Datum, eine optionale Startzeit und eine geschätzte Dauer (15–720 Minuten) erfassen. Die Angabe ist Bestandteil der Aufgabe und damit sofort beim ausführenden Team sichtbar. Es findet keine automatische Mitarbeiterzuteilung oder Kalender-Synchronisierung statt; Zuständigkeit bleibt wie bisher ein Freitextfeld.
+
+**Kundenchat:** «Kundenchat» ist eine direkte, getrennte Unterhaltung zwischen dem Manager eines Unternehmens und der F&B-Plattformverwaltung. Ein optionaler Bezug zu einem Auftrag ist möglich. Nachrichten und Autoren werden serverseitig gespeichert, niemals aus beliebigen Clientfeldern übernommen. Filialleiter und Mitarbeiter haben keinen Zugriff. Die D1-Migration `0002_customer_messages.sql` muss vor Nutzung eingespielt werden. Die API liegt unter `/api/chat`; das Frontend lädt die letzten 500 Nachrichten nach Abruf. Es gibt keine externen Push-/E-Mail-Benachrichtigungen und keine dauerhafte WebSocket-Verbindung. Stattdessen werden neue Nachrichten in der App-Benachrichtigungsglocke angezeigt; der Verlauf selbst kann weiterhin mit «Aktualisieren» geladen werden.
+
+**Demo:** Die neuen Module sind im vorhandenen `/demo.html` mit getrennten, lokalen Demo-Nachrichten verfügbar. Änderungen der Demo gelangen niemals zu Live-Kunden. Der Kundenchat ist erst nach erfolgter Migration in der echten Site einsatzbereit. In der produktiven Site bleiben Login, Mandantenfreigabe, Backups und Security-Audit vor Kundeneinführung Voraussetzung.
+
+**Tests:** `NODE_PATH=$(npm root -g) node tests/new-modules.cjs` prüft Chat-Mandantengrenzen, Eingabevalidierung, Zeitplanung und Gebäudeakte. `npm test` führt diesen Test zusammen mit den bestehenden Regressionstests aus. Vor produktivem Einsatz sind ein E2E-Browsertest und ein Test mit realen Berechtigungen auf dem finalen Hosting erforderlich.
+
+
+## Erweiterung 03.11.2026 · Automatische Benachrichtigungen
+
+**Benachrichtigungsglocke:** Alle aktiven Rollen erhalten oben rechts einen Posteingang mit Anzahl ungelesener Meldungen, einer Liste, Datum/Uhrzeit und Schnellzugriff auf Auftrag oder Kundenchat. Abruf beim Öffnen und anschliessend ca. alle 45 Sekunden, solange die Seite sichtbar ist. Einzeln oder gesammelt als gelesen markieren. In der isolierten `/demo.html` wird dies vollständig lokal simuliert und verändert keine Live-Daten.
+
+**Auslöser:** Neue/aktualisierte Mängel, Freigaben, Ablehnungen, bestätigte Einsatztermine, Abschlussrapporte sowie Chatnachrichten. Das Backend erzeugt Nachrichten erst nach einem erfolgreichen Speichern. Empfänger werden ausschliesslich serverseitig anhand aktiver Teamrechte ausgewählt: Kundenmanager nur für ihre Firma, Filialleiter nur für ihre Filiale, Ausführungsteam für freigegebene Einsätze (bei exakter Mitarbeiterzuordnung nur der zugewiesene Mitarbeiter), Superadmin für neue Meldungen/Abschlüsse und Kundennachrichten. Nachrichtenersteller erhalten keine Selbstbenachrichtigung.
+
+**Datenschutz:** `/api/notifications` authentifiziert jede Anfrage; GET und PATCH filtern nach Inhaber, empfangender E-Mail und (für Manager/Filialleiter) Unternehmens-/Filialzuordnung. PATCH verwendet Origin- und grant-Revision-Prüfung. Inhalte werden HTML-escaped, Nachrichten serverseitig gespeichert. Es werden **keine** E-Mails oder nativen iPad-Push-Mitteilungen versendet. Ein Versandkanal und Benachrichtigungspräferenzen wären ein späterer Ausbau.
+
+**Deployment:** Die neue, additive D1-Migration `drizzle/0003_notifications.sql` ist auf der Zielumgebung einzuspielen, bevor das Modul live genutzt wird. Bestehende Migrationen nicht zurücksetzen oder bearbeiten. Eine automatische nachträgliche Benachrichtigung für historische Aufträge wird nicht erzeugt. Bei Fehlern der Benachrichtigungsablage bleibt ein zuvor korrekt gespeicherter Auftrag bzw. Chat erhalten; für garantierte Eventzustellung wäre später eine transaktionale Outbox sinnvoll.
+
+**Tests:** `tests/notifications.cjs` prüft Routing, Datenschutz zwischen Kunden/Filialen, persönliche Einsatzzuweisung, ungelesen/Gelesen, Rechtewechsel und Fehlzugriffe. `npm test` führt alle Tests aus. Ein finaler Browser-/Hosting-Integrationstest ist vor der Kundeneinführung noch erforderlich.

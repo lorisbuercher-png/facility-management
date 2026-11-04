@@ -20,6 +20,7 @@ function scope(v:Viewer){
 }
 export async function GET(request:Request){
  const user=await viewer(request);if(user instanceof Response)return user;
+ if(!env.DB)return reply({error:'Datenbank nicht verfuegbar.'},503);
  const s=scope(user);
  const where='owner_id = ? AND recipient_email = ?'+s.where;
  const params=[user.ownerId,user.email,...s.bind];
@@ -36,6 +37,7 @@ export async function PATCH(request:Request){
  let input:any;try{input=JSON.parse(raw)}catch{return reply({error:'Ungültige Daten.'},400)}
  if(!input||!(input.all===true||typeof input.id==='string'&&/^[\w-]{1,100}$/.test(input.id)))return reply({error:'Ungültige Auswahl.'},400);
  const user=await viewer(request);if(user instanceof Response)return user;
+ if(!env.DB)return reply({error:'Datenbank nicht verfuegbar.'},503);
  const s=scope(user),now=new Date().toISOString();
  const guard=user.grant?{sql:' AND EXISTS (SELECT 1 FROM team_access WHERE id = ? AND owner_id = ? AND email = ? AND role = ? AND company_id IS ? AND location_id IS ? AND active = 1 AND revision = ?)',bind:[user.grant.id,user.grant.owner_id,user.grant.email,user.grant.role,user.grant.company_id,user.grant.location_id,user.grant.revision]}:{sql:'',bind:[]};
  const result=await env.DB.prepare(`UPDATE notifications SET read_at = ? WHERE owner_id = ? AND recipient_email = ?${s.where} AND read_at IS NULL${input.all===true?'':' AND id = ?'}${guard.sql}`).bind(now,user.ownerId,user.email,...s.bind,...(input.all===true?[]:[input.id]),...guard.bind).run();

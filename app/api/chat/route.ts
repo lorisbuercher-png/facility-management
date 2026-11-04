@@ -16,6 +16,7 @@ async function authenticate(request:Request):Promise<Viewer|Response>{
 }
 async function context(request:Request,companyId:string){
  const viewer=await authenticate(request);if(viewer instanceof Response)return {error:viewer};
+ if(!env.DB)return {error:reply({error:'Datenbank nicht verfuegbar.'},503)};
  const row=await env.DB.prepare('SELECT payload FROM platform_state WHERE owner_id = ?').bind(viewer.ownerId).first<{payload:string}>();
  if(!row)return {error:reply({error:'Unternehmensdaten fehlen.'},404)};
  let state:any;try{state=JSON.parse(row.payload)}catch{return {error:reply({error:'Unternehmensdaten ungültig.'},500)}}
@@ -25,6 +26,7 @@ async function context(request:Request,companyId:string){
 export async function GET(request:Request){
  const companyId=new URL(request.url).searchParams.get('companyId')||'';
  const result=await context(request,companyId);if(result.error)return result.error;
+ if(!env.DB)return reply({error:'Datenbank nicht verfuegbar.'},503);
  const records=await env.DB.prepare('SELECT * FROM (SELECT id,company_id AS companyId,task_id AS taskId,author_role AS authorRole,author_name AS authorName,body,created_at AS createdAt FROM customer_messages WHERE owner_id = ? AND company_id = ? ORDER BY created_at DESC, id DESC LIMIT 500) ORDER BY createdAt ASC, id ASC').bind(result.viewer!.ownerId,companyId).all();
  return reply({messages:records.results});
 }
@@ -34,6 +36,7 @@ export async function POST(request:Request){
  const raw=await request.text();if(raw.length>10000)return reply({error:'Nachricht zu lang.'},413);
  let input:any;try{input=JSON.parse(raw)}catch{return reply({error:'Ungültige Daten.'},400)}
  const result=await context(request,input?.companyId||'');if(result.error)return result.error;
+ if(!env.DB)return reply({error:'Datenbank nicht verfuegbar.'},503);
  const {viewer,state}=result;
  const error=validateChatMessage(input,state,viewer!);if(error)return reply({error},400);
  // Reconfirm active tenant grant during write, never trust a client-supplied role/author.

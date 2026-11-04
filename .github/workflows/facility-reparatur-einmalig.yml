@@ -91,7 +91,7 @@ jobs:
       - name: pnpm bereitstellen
         uses: pnpm/action-setup@v4
         with:
-          version: 11
+          version: 11.25.0
       - name: Node.js bereitstellen
         uses: actions/setup-node@v4
         with:

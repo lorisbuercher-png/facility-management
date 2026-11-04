@@ -1,0 +1,3 @@
+Nur die Datei public/review.js ersetzen.
+Im GitHub-Repository den Ordner public öffnen, dann review.js durch die neue Version ersetzen und Commit changes ausführen.
+Dies entfernt nur die Schaltfläche Plattform-Check aus der Superadmin-Navigation. Der Projektstand für Manager bleibt unverändert.

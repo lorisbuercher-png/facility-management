@@ -1,0 +1,119 @@
+name: Facility Management - einmalige Upload-Reparatur
+
+on:
+  push:
+    paths:
+      - '.github/workflows/facility-reparatur-einmalig.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reparatur:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Projekt laden
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Update-Dateien an die richtigen Stellen verschieben
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import shutil
+          repo = Path.cwd()
+          source = repo / 'Facility_Management_GitHub_FIX_NUR_Dateien'
+          if not source.is_dir():
+              raise SystemExit('Das erwartete Update-Verzeichnis fehlt. Es wurden keine Dateien geaendert.')
+          files = sorted(p for p in source.rglob('*') if p.is_file())
+          expected = {'public/project-status.js', 'public/notifications.js', 'app/notifications.ts',
+                      'app/api/chat/route.ts', 'app/api/notifications/route.ts', 'db/schema.ts'}
+          present = {p.relative_to(source).as_posix() for p in files}
+          if len(files) != 38 or not expected.issubset(present):
+              raise SystemExit(f'Update-Dateien nicht wie erwartet ({len(files)}). Abbruch aus Sicherheitsgruenden.')
+          allowed = {'app', 'public', 'db', 'drizzle', 'tests'}
+          for path in files:
+              rel = path.relative_to(source)
+              if rel.as_posix() != 'README.md' and rel.parts[0] not in allowed:
+                  raise SystemExit(f'Unerwarteter Dateipfad: {rel}')
+          for path in files:
+              target = repo / path.relative_to(source)
+              target.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copy2(path, target)
+              print(f'Korrigiert: {target.relative_to(repo)}')
+
+          # Die vorhandenen Chat- und Notification-Routen benoetigen bei optionaler DB
+          # explizite Guards, damit TypeScript und der API-Fehlerfall korrekt sind.
+          chat = repo / 'app/api/chat/route.ts'
+          content = chat.read_text(encoding='utf-8')
+          old = 'const viewer=await authenticate(request);if(viewer instanceof Response)return {error:viewer};'
+          new = old + "\n if(!env.DB)return {error:reply({error:'Datenbank nicht verfuegbar.'},503)};"
+          if old not in content:
+              raise SystemExit('Chat-Guard-Einfuegestelle fehlt. Abbruch.')
+          content = content.replace(old, new, 1)
+          old = 'const result=await context(request,companyId);if(result.error)return result.error;'
+          new = old + "\n if(!env.DB)return reply({error:'Datenbank nicht verfuegbar.'},503);"
+          if old not in content:
+              raise SystemExit('Chat-GET-Einfuegestelle fehlt. Abbruch.')
+          content = content.replace(old, new, 1)
+          old = "const result=await context(request,input?.companyId||'');if(result.error)return result.error;"
+          new = old + "\n if(!env.DB)return reply({error:'Datenbank nicht verfuegbar.'},503);"
+          if old not in content:
+              raise SystemExit('Chat-POST-Einfuegestelle fehlt. Abbruch.')
+          content = content.replace(old, new, 1)
+          chat.write_text(content, encoding='utf-8')
+
+          notifications = repo / 'app/api/notifications/route.ts'
+          content = notifications.read_text(encoding='utf-8')
+          old = 'const user=await viewer(request);if(user instanceof Response)return user;'
+          new = old + "\n if(!env.DB)return reply({error:'Datenbank nicht verfuegbar.'},503);"
+          if content.count(old) != 2:
+              raise SystemExit('Notifications-Guard-Einfuegestelle fehlt. Abbruch.')
+          notifications.write_text(content.replace(old, new), encoding='utf-8')
+
+          for folder in (
+              'Facility_Management_NUR_Aenderungen_gesamt',
+              'Facility_Management_FIX_Glocke_sichtbar',
+              'Facility_Management_NUR_Update_Manager_Projektstand',
+              'Facility_Management_GitHub_FIX_NUR_Dateien',
+          ):
+              p = repo / folder
+              if p.is_dir():
+                  shutil.rmtree(p)
+                  print('Doppelten Ordner entfernt:', folder)
+          PY
+
+      - name: pnpm bereitstellen
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - name: Node.js bereitstellen
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Abhaengigkeiten installieren
+        run: pnpm install --frozen-lockfile
+      - name: Funktionstests
+        run: pnpm test
+      - name: TypeScript pruefen
+        run: pnpm typecheck
+
+      - name: Reparatur speichern
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'Keine Aenderungen notwendig.'
+            exit 0
+          fi
+          git commit -m 'Fix: Facility-Updates in richtige Projektordner integrieren'
+          git push origin HEAD:main

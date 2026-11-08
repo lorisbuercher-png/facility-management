@@ -1,0 +1,302 @@
+/*
+ * Soft Glossy 2027 — presentation-only enhancement.
+ * Loaded after existing application styles. No business rules, API, state,
+ * role permissions, workflows or tenant branding are changed.
+ */
+:root{
+  --ink:#222b43;--green:#7264ec;--paper:#f7f8fd;--line:#e8eaf4;
+  --muted:#7d859b;--gloss-primary:#7566f4;--gloss-secondary:#ec83bc;
+  --gloss-ink:#242941;--gloss-edge:#e9eaf5;--gloss-shadow:0 12px 35px rgba(45,43,98,.055),0 2px 7px rgba(45,43,98,.025);
+}
+html{scroll-behavior:smooth}
+body{
+  color:var(--gloss-ink);
+  background:
+    radial-gradient(ellipse 680px 450px at 14% -12%,rgba(189,179,255,.24),transparent 72%),
+    radial-gradient(ellipse 700px 500px at 100% 10%,rgba(255,197,213,.24),transparent 74%),
+    radial-gradient(ellipse 650px 460px at 70% 95%,rgba(177,219,255,.17),transparent 70%),#f7f8fd;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select,textarea{font:inherit}
+button,a{-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:3px solid #b6aaff;outline-offset:3px
+}
+button{transition:background-color .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease}
+@media(hover:hover){button:not(:disabled):active{transform:translateY(1px)}}
+
+/* Light, floating sidebar instead of a heavy dark navigation rail. */
+header.sidebar{
+  background:linear-gradient(175deg,rgba(255,255,255,.98),rgba(253,253,255,.97) 65%,rgba(248,247,255,.96));
+  color:#4a536b;
+  border:1px solid rgba(226,225,244,.85);
+  box-shadow:0 20px 55px rgba(52,45,106,.075),inset 0 1px rgba(255,255,255,.92);
+  -webkit-backdrop-filter:blur(26px) saturate(145%);
+  backdrop-filter:blur(26px) saturate(145%);
+  border-radius:24px;
+}
+header.sidebar .brand{color:#202945;font-size:19px;font-weight:800;letter-spacing:-.75px}
+header.sidebar .brand small{color:#9498ab;font-size:9px;letter-spacing:1.9px}
+header.sidebar .brand>svg{
+  color:#fff;stroke:#fff;width:24px;height:24px;padding:10px;box-sizing:content-box;
+  border-radius:14px;
+  background:linear-gradient(140deg,#7361f5 5%,#ae7bf2 48%,#f499bc 85%,#ffc59d 105%);
+  box-shadow:0 7px 20px rgba(119,104,236,.26),inset 0 1px 0 rgba(255,255,255,.33);
+}
+header.sidebar .nav button{
+  color:#727b92;font-size:12px;font-weight:650;border:1px solid transparent;
+  border-radius:14px;min-height:47px;padding:12px 14px;position:relative
+}
+header.sidebar .nav button:hover{background:rgba(244,242,255,.85);color:#4e479b}
+header.sidebar .nav button.active{
+  color:#6959dc;background:linear-gradient(115deg,#eeeaff,#f7f2ff 68%,#fff1f8);
+  border-color:#e8dfff;box-shadow:0 4px 16px rgba(101,87,227,.07),inset 0 1px 0 #fff;
+  font-weight:760;
+}
+header.sidebar .nav button.active::before{
+  content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:4px;background:#8875f9;
+}
+header.sidebar .nav button svg{color:inherit}
+header.sidebar .sidebar-art{color:#a6a0d8;opacity:.39}
+header.sidebar .sidebar-note{color:#9490b0}
+header.sidebar .account{border-top:1px solid #edeaf5;color:#333c56}
+header.sidebar .account b{color:#333c56}
+header.sidebar .account small{color:#9499aa}
+header.sidebar .account a{color:#8b88b1}
+header.sidebar .avatar{
+  color:#6254b3;background:linear-gradient(140deg,#f5e5fa,#cbd0ff);
+  border:1px solid #fff;box-shadow:0 5px 12px rgba(105,84,195,.08)
+}
+
+/* Frosted top utility bar and search. */
+.app-topbar{
+  background:rgba(255,255,255,.78);border-bottom:1px solid rgba(236,235,248,.86);
+  box-shadow:0 1px 0 rgba(255,255,255,.9);
+  -webkit-backdrop-filter:blur(20px) saturate(145%);
+  backdrop-filter:blur(20px) saturate(145%)
+}
+.breadcrumbs{color:#9399a9}
+.breadcrumbs strong{color:#42435f;font-weight:750}
+.global-search input{
+  border-radius:14px;background:rgba(248,248,254,.92);
+  border:1px solid #e9e8f5;box-shadow:inset 0 1px 2px rgba(43,39,104,.02)
+}
+.global-search input::placeholder{color:#a6a9b9}
+.global-search input:focus-visible{border-color:#b6aaff;background:#fff}
+.app-topbar .icon-button{
+  border-radius:13px;border:1px solid #e9e9f3;background:rgba(255,255,255,.86);color:#73758e;
+  box-shadow:0 1px 5px rgba(29,32,82,.025);
+}
+.app-topbar .icon-button:hover{background:#f1edff;color:#6358bf}
+#cloud-status{background:rgba(255,255,255,.62)!important;color:#79829b!important}
+
+/* Shared cards: soft highlights, restrained gloss and generous rhythm. */
+.panel,.company-card,.summary-strip,.employee-job,.record-stats article,.employee-week-day{
+  border-color:var(--gloss-edge);border-radius:20px;
+  box-shadow:var(--gloss-shadow);
+}
+main:not(.customer-ambience) .panel,
+main:not(.customer-ambience) .company-card,
+main:not(.customer-ambience) .summary-strip,
+main:not(.customer-ambience) .employee-job,
+main:not(.customer-ambience) .employee-week-day{
+  background:linear-gradient(160deg,rgba(255,255,255,.99),rgba(255,255,255,.94));
+}
+.panel,.company-card,.welcome-metric,.record-stats article,.employee-job{
+  transition:border-color .2s,box-shadow .22s,transform .22s;
+}
+@media(hover:hover){
+  .company-card:hover,.employee-job:hover,.record-stats article:hover{
+    box-shadow:0 17px 44px rgba(70,58,126,.09),0 2px 7px rgba(70,58,126,.03);
+    border-color:#ddd9f4;transform:translateY(-2px);
+  }
+}
+.panel h2,.section-title h2{letter-spacing:-.45px;color:#2b3148}
+.eyebrow{color:#948bb7;letter-spacing:1.65px;font-weight:800}
+h1{color:#232845;letter-spacing:-1.25px;font-weight:760}
+#subtitle{color:#858aa0;font-size:13px}
+.muted-note,.subtext,.company-card-meta{color:#8990a3}
+.primary{
+  color:#fff;background:linear-gradient(125deg,#7566f4,#8670fa 58%,#a77df0);
+  border:1px solid rgba(115,97,228,.5);border-radius:13px;
+  box-shadow:0 8px 20px rgba(116,95,234,.21),inset 0 1px rgba(255,255,255,.32);
+  font-weight:750
+}
+.primary:hover{background:linear-gradient(125deg,#6655e7,#7966f0 58%,#9a70e6);box-shadow:0 12px 22px rgba(116,95,234,.25)}
+.outline{border-color:#e7e6f3;border-radius:12px;background:rgba(255,255,255,.92);color:#5c607e}
+.outline:hover{background:#f5f1ff;border-color:#dfd7fa;color:#5f51ba}
+.icon-button{color:#74778e}
+.badge{border-radius:999px;background:#eefaf4;color:#269477}
+.badge.paused{background:#fff5e7;color:#b48642}
+.priority{border-radius:999px;background:#f2f1ff;color:#7568bf}
+.priority.urgent{background:#fff0ec;color:#d27160}
+input,select,textarea{
+  border-radius:12px;color:#323a54;border-color:#e7e7f2;
+  background:rgba(252,252,255,.96)
+}
+input:focus,select:focus,textarea:focus{border-color:#a69df1}
+
+/* The platform admin heading becomes a small gradient-lit hero. */
+main:not(.customer-ambience)>.title-row{
+  position:relative;isolation:isolate;overflow:hidden;
+  padding:31px 33px;margin-bottom:22px;min-height:146px;
+  background:
+    radial-gradient(ellipse 370px 220px at 93% 0%,rgba(209,187,255,.43),transparent 75%),
+    radial-gradient(ellipse 250px 180px at 68% 110%,rgba(255,198,206,.33),transparent 74%),
+    linear-gradient(135deg,#fff,#fdfaff 70%,#fbf9ff);
+  border:1px solid #eae5f8;border-radius:23px;
+  box-shadow:0 13px 35px rgba(85,66,137,.055),inset 0 1px #fff;
+}
+main:not(.customer-ambience)>.title-row::after{
+  content:"";position:absolute;right:19%;top:-94px;width:270px;height:270px;
+  border-radius:50%;border:1px solid rgba(169,143,229,.13);
+  box-shadow:0 0 0 35px rgba(180,157,240,.045),0 0 0 74px rgba(180,157,240,.025);
+  pointer-events:none;z-index:-1;
+}
+main:not(.customer-ambience)>.title-row h1{font-size:clamp(28px,3vw,39px);font-weight:800;margin:8px 0}
+main:not(.customer-ambience)>.title-row .eyebrow{color:#8070bb}
+main:not(.customer-ambience)>.title-row .primary{z-index:1}
+
+/* Modern dashboard / bento blocks. */
+.summary-strip{overflow:hidden}
+.summary-strip>div{position:relative}
+.summary-strip>div::before,.workspace-metrics>.panel::before{
+  content:"";position:absolute;width:125px;height:125px;right:-45px;top:-59px;
+  border-radius:50%;background:radial-gradient(circle,rgba(205,195,255,.29),transparent 70%);
+  pointer-events:none
+}
+.summary-strip strong{color:#252d49;font-size:clamp(25px,2.5vw,34px);font-weight:800;letter-spacing:-1px}
+.summary-strip svg{color:#7566e2}
+.dashboard-grid,.activity-grid,.workspace-columns{gap:18px}
+.company-card{overflow:hidden}
+.company-card-heading h3{color:#28304a;font-weight:740}
+.company-card-actions{gap:9px}
+.completion-track{background:#efeff7;border-radius:999px}
+.completion-track span{background:linear-gradient(90deg,#6b79ef,#b68cf1);border-radius:999px}
+.work-table th{color:#9194a7}
+.work-table td{color:#41485f}
+.work-status{border-radius:999px}
+.empty-state{color:#9295a6}
+.quick button{border-color:#ebeaf3}
+.quick i{background:#f0eeff;color:#7664cb}
+
+/* Customer portals: preserve their configured brand colours and dark mode. */
+main.customer-ambience .panel,
+main.customer-ambience .company-card,
+main.customer-ambience .welcome-focus,
+main.customer-ambience .welcome-next,
+main.customer-ambience .welcome-completion,
+main.customer-ambience .welcome-activity,
+main.customer-ambience .welcome-place{
+  border-radius:22px;box-shadow:0 12px 36px rgba(36,47,82,.065),inset 0 1px rgba(255,255,255,.26);
+}
+main.customer-ambience .workspace-top{gap:16px}
+main.customer-ambience .workspace-nav{
+  border-bottom-color:rgba(130,140,166,.14);gap:7px;min-width:0
+}
+main.customer-ambience .workspace-nav button{border-radius:12px;min-height:42px}
+main.customer-ambience .workspace-nav button.selected{
+  box-shadow:inset 0 1px rgba(255,255,255,.34),0 5px 14px rgba(22,38,73,.06)
+}
+main.customer-ambience .welcome-hero{
+  border-radius:26px;overflow:hidden;box-shadow:0 18px 45px rgba(28,39,85,.095)
+}
+main.customer-ambience .welcome-metric{
+  border-radius:21px;box-shadow:0 12px 30px rgba(34,42,88,.045)
+}
+main.customer-ambience .welcome-task{border-radius:14px}
+main.customer-ambience .workspace-metrics>.panel{position:relative;overflow:hidden}
+main.customer-ambience .workspace-metrics strong{
+  color:var(--tenant-primary,#3c526e);font-weight:780
+}
+main.customer-ambience[data-tenant-mode="dark"] .workspace-metrics strong{color:var(--tenant-text,#e7edf6)}
+main.customer-ambience .task-row{border-color:rgba(135,148,168,.16)}
+main.customer-ambience .record-intro,
+main.customer-ambience .employee-intro{border-radius:25px;overflow:hidden}
+main.customer-ambience .record-event-body{border-radius:16px}
+main.customer-ambience .record-dot{box-shadow:0 4px 10px rgba(37,53,86,.05)}
+main.customer-ambience .record-stats article{
+  border-radius:19px;box-shadow:0 7px 23px rgba(29,44,70,.04)
+}
+main.customer-ambience .record-stats article strong{font-weight:780}
+
+/* Employee portal: focused actions and large touch targets. */
+.employee-workspace .employee-intro{
+  border-radius:25px;border:1px solid #e7e8f3;
+  background:
+    radial-gradient(ellipse at 85% 20%,rgba(218,200,255,.5),transparent 52%),
+    radial-gradient(ellipse at 4% 100%,rgba(196,229,255,.36),transparent 50%),
+    linear-gradient(120deg,#fff,#f9f9ff);
+  box-shadow:0 10px 28px rgba(40,53,102,.04)
+}
+.employee-workspace .employee-intro-icon{
+  background:linear-gradient(145deg,#fff,#dedaff);
+  color:#7667d7;box-shadow:0 14px 29px rgba(106,90,203,.15),inset 0 2px #fff
+}
+.employee-job-actions button{min-height:44px}
+.employee-week-day{overflow:hidden}
+.employee-plan-time,.employee-time{border-radius:12px}
+.employee-map-locations{border-radius:20px}
+
+/* Dialogs, notifications, and reports must remain readable. */
+dialog{border:1px solid #e9e7f5;border-radius:23px;box-shadow:0 30px 90px rgba(29,30,73,.22)}
+dialog::backdrop{-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);background:rgba(28,28,59,.36)}
+.modal-header{background:linear-gradient(120deg,#fff,#fcfaff);border-bottom:1px solid #ebeaf4}
+.modal-header h2{font-size:19px;font-weight:760}
+.modal-body{background:#fff}
+.toast{border-radius:14px;background:#38345d;color:#fff;box-shadow:0 13px 30px rgba(36,32,89,.24)}
+.demo-mode-banner{
+  background:linear-gradient(110deg,#fbf8ff,#fff4f7);
+  border-color:#eadff7;color:#6a5591
+}
+.demo-mode-banner span,.demo-mode-banner label,.demo-mode-banner a{color:#7e6b95}
+.demo-mode-banner select,.demo-mode-banner button{background:#fff;color:#6a5591;border-color:#e8dcf4}
+
+/* Small-screen controls: keep every existing section visible, no clipped labels. */
+@media(max-width:1200px){
+  main:not(.customer-ambience)>.title-row{padding:25px}
+}
+@media(max-width:720px){
+  header.sidebar{border-radius:0 24px 24px 0;inset:0 auto 0 0;height:100dvh;width:244px}
+  .nav-open header.sidebar{box-shadow:16px 0 56px rgba(31,28,82,.15)}
+  .app-topbar{padding:0 14px;background:rgba(255,255,255,.86)}
+  main:not(.customer-ambience)>.title-row{min-height:0;padding:23px 19px;border-radius:20px;gap:16px}
+  main:not(.customer-ambience)>.title-row h1{font-size:29px;line-height:1.18;overflow-wrap:anywhere}
+  main:not(.customer-ambience)>.title-row .primary{max-width:100%;white-space:normal;text-align:center}
+  .panel,.company-card,.record-stats article{border-radius:16px}
+  .workspace-nav{overflow-x:auto;max-width:100%;scrollbar-width:none}
+  .workspace-nav::-webkit-scrollbar{display:none}
+  .workspace-nav button{min-width:fit-content;white-space:nowrap}
+  .record-intro,.employee-intro{border-radius:19px}
+  .record-event-body{min-width:0}
+  .record-event-body h3,.employee-job h3{overflow-wrap:anywhere}
+  .employee-job-actions{gap:8px}
+  .employee-job-actions button{white-space:normal}
+  .modal-body{padding:20px}
+  .form-grid{min-width:0}
+  .form-grid>*{min-width:0}
+  footer{overflow-wrap:anywhere}
+  .demo-mode-banner{padding:13px 17px}
+}
+@media(max-width:420px){
+  .app-topbar .global-search{min-width:0}
+  .app-topbar .icon-button{flex:0 0 auto}
+  .title-row{gap:12px}
+  .workspace-nav{gap:5px}
+  main:not(.customer-ambience)>.title-row h1{font-size:26px}
+  .employee-job-actions button{width:100%;justify-content:center}
+  .record-stats article{padding:14px 11px}
+}
+@media(prefers-reduced-transparency:reduce){
+  header.sidebar,.app-topbar{backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff}
+}
+@media(prefers-contrast:more){
+  .panel,.company-card,.summary-strip,.record-stats article{border-color:#9295a8}
+  header.sidebar .nav button.active{border-color:#8e80e8}
+  .app-topbar,.global-search input{border-color:#999cab}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .company-card:hover,.employee-job:hover,.record-stats article:hover{transform:none}
+}

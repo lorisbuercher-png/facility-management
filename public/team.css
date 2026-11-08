@@ -1,1 +1,73 @@
 .team-notice{padding:20px 23px;border:1px solid #dce6ef;border-radius:11px;background:#edf3f9;margin-bottom:20px;color:#536f8b}.team-notice>strong{font-size:13px}.team-notice p{font-size:11px;line-height:1.9;margin-top:8px;color:#7b90a6;max-width:850px}.team-row{display:flex;align-items:center;gap:15px;border-bottom:1px solid #edf1f6;padding:22px 0}.team-row:last-child{border:0}.team-avatar{width:42px;height:42px;display:grid;place-items:center;flex-shrink:0;border-radius:12px;background:#edf3f9;color:#718eab;font-size:17px}.team-person{flex:1;min-width:0}.team-person h3{font-size:13px;font-weight:600;margin:0 0 7px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.team-person p{font-size:11px;overflow-wrap:anywhere}.team-person>span{font-size:10px;color:#92a2b6;display:block;margin-top:6px}.team-row-actions{display:flex;gap:8px}.team-error{font-size:11px;line-height:1.7;color:#b16d51;margin-top:15px}.member-notice{padding:10px 14px;border:1px solid var(--tenant-border,#e0e7ef);border-radius:8px;font-size:10px;background:var(--tenant-surface,#fff);color:var(--tenant-muted,#7c8da2);margin-bottom:18px}.member-mode .customer-ambience .customer-location-content button{display:none}@media(max-width:650px){.team-row{flex-wrap:wrap;gap:12px}.team-row-actions{margin-left:54px}.team-row-actions .outline{min-height:40px}.team-person h3{font-size:12px}.team-notice{padding:18px}.team-notice p{font-size:10px}}
+
+/*
+ * Mobile team cards: action buttons must never compress the name/email
+ * column into a one-character-wide strip. Shared by the superadmin Team
+ * view and the manager's Filialleiter view.
+ */
+@media(max-width:720px){
+  .team-row{
+    display:grid;
+    grid-template-columns:42px minmax(0,1fr);
+    grid-template-areas:"avatar person" ". actions";
+    align-items:start;
+    width:100%;
+    min-width:0;
+    column-gap:12px;
+    row-gap:13px;
+    padding:18px 0;
+  }
+  .team-row .team-avatar{
+    grid-area:avatar;
+    align-self:start;
+    margin-top:1px;
+  }
+  .team-row .team-person{
+    grid-area:person;
+    width:100%;
+    min-width:0;
+  }
+  .team-row .team-person h3{
+    font-size:13px;
+    line-height:1.4;
+    min-width:0;
+  }
+  .team-row .team-person p,
+  .team-row .team-person>span{
+    display:block;
+    max-width:100%;
+    min-width:0;
+    overflow-wrap:anywhere;
+    word-break:normal;
+    line-height:1.6;
+  }
+  .team-row .team-person p{
+    font-size:12px;
+  }
+  .team-row .team-row-actions{
+    grid-area:actions;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+    width:100%;
+    min-width:0;
+    margin:0;
+    justify-content:stretch;
+  }
+  .team-row .team-row-actions .outline{
+    width:100%;
+    min-width:0;
+    min-height:44px;
+    padding:10px 7px;
+    font-size:12px;
+    line-height:1.35;
+    white-space:normal;
+    overflow-wrap:normal;
+    text-align:center;
+  }
+}
+@media(max-width:350px){
+  .team-row .team-row-actions{
+    grid-template-columns:1fr;
+  }
+}

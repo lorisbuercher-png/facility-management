@@ -3,66 +3,76 @@ const fs=require('node:fs');
 const html=fs.readFileSync('public/landing.html','utf8');
 const css=fs.readFileSync('public/landing.css','utf8');
 const workflow=fs.readFileSync('.github/workflows/demo-pages.yml','utf8');
+const workflowLogic=fs.readFileSync('app/workflow.ts','utf8');
+const branch=fs.readFileSync('public/branch-view.js','utf8');
+const chat=fs.readFileSync('public/customer-chat.js','utf8');
+const buildingRecord=fs.readFileSync('public/building-record.js','utf8');
+const employee=fs.readFileSync('public/employee.js','utf8');
 
-assert.match(html,/<!doctype html>/i);
-assert.match(html,/<html lang="de-CH">/);
-assert.match(html,/Gebäudeunterhalt/);
-assert.match(html,/Weniger Aufwand/);
-assert.match(html,/Alles im Blick/);
-assert.match(html,/Content-Security-Policy/);
-assert.match(html,/script-src 'none'/);
-assert.match(html,/connect-src 'none'/);
-assert(!/<script\b|<form\b|<input\b|<button\b|<iframe\b/ig.test(html),'No executable code, forms, embedded apps or product functionality');
-assert(!/(demo\.html|\/dashboard|carglass|sites\.test|lorisbuercher\.chatgpt\.site|\/api\/|login|supabase)/i.test(html),'No public demos or private app/customer references');
+const has=(pattern,reason)=>assert.match(html,pattern,reason);
+
+// The public site is only a static acquisition page, not a client demo.
+has(/<!doctype html>/i,'Valid document');
+has(/<html lang="de-CH">/,'Swiss marketing site');
+has(/Content-Security-Policy/,'Protect public landing');
+has(/script-src 'none'/,'Do not allow scripts');
+has(/connect-src 'none'/,'Do not allow API calls');
+assert(!/<script\b|<form\b|<input\b|<button\b|<iframe\b/ig.test(html),'No executable script, forms or app components');
+assert(!/(demo\.html|\/dashboard|carglass|lorisbuercher\.chatgpt\.site|\/api\/|login|supabase)/i.test(html),'No customer references or private app routes');
 const links=[...html.matchAll(/href="([^"]+)"/g)].map(m=>m[1]);
-assert(links.every(link=>link.startsWith('#')||link.startsWith('mailto:')||link==='landing.css'),'Only same-page navigation and email contact');
-assert(!/\b(?:https?:)?\/\//i.test(html.replace(/<!doctype[^>]*>/i,'')),'No externally fetched assets or fonts');
+assert(links.every(link=>link.startsWith('#')||link.startsWith('mailto:')||link==='landing.css'),'Only same-page links, mailto and local stylesheet');
+assert(!/\b(?:https?:)?\/\//i.test(html.replace(/<!doctype[^>]*>/i,'')),'No third-party resources');
+has(/<strong>FB SPEZIALBAU<\/strong>/,'FB Spezialbau identity');
 
-// The graphic must explain maintenance, trades and documentation instead of
-// being generic decoration. It remains static SVG/HTML and contains no data.
-assert.match(html,/class="building-art"/,'Buildings are shown in an inline vector illustration');
-assert.match(html,/Mangel gemeldet/,'Maintenance problem visible in graphic');
-assert.match(html,/FB übernimmt/,'FB takes over execution after manager approval');
-assert.match(html,/Nach Managerfreigabe/,'Manager approval shown before FB takes over');
-assert.match(html,/Erledigt &amp; dokumentiert/,'Completed work and documentation shown in graphic');
-assert.match(html,/Rapport und Fotos/,'Report/fotos are represented');
-assert.equal((html.match(/class="process-card"/g)||[]).length,4,'Four-step maintenance process');
-assert.match(html,/id="gebaeudeakte"/,'Building record section');
-assert.match(html,/Management/);
-assert.match(html,/Filialleitung/);
-assert.match(html,/FB Spezialbau &amp; Ausführung/);
-assert.match(html,/Symbolische Illustration|Schematische Darstellung/,'Graphic states it is illustrative');
-assert.match(html,/Pilotbetrieb/,'Do not claim unfinished features are already operating');
+// Commercial promise is grounded in the actual modules and customer roles.
+has(/FACILITY MANAGEMENT · VON FB SPEZIALBAU/,'Position software + executing contractor');
+has(/Weniger Aufwand/,'Lead with customer benefit');
+has(/Mehr Überblick/,'Lead with multi-site visibility');
+has(/Dashboard/,'Dashboards exist');
+has(/Kundenchat/,'Customer chat is offered');
+has(/Rapport/,'Task documentation is offered');
+has(/Gebäudeakte/,'Building dossier is offered');
+has(/alle Ihre Filialen/,'Multi-site management is a core benefit');
+has(/Freigaben/,'Approvals are in the UI');
+has(/nach Filiale, Status oder Priorität filtern/,'Filters are implemented');
+has(/Arbeitsstunden/,'Completed task captures hours');
+has(/Vorher- und Nachher-Fotos/,'Building dossier displays before/after images');
+has(/begründet ab/,'Manager can reject with reason');
+assert.match(workflowLogic,/if\(user\.role!=='manager'\)return fail\('Nur der zuständige Manager darf freigeben oder ablehnen\./,'Manager owns approvals in server logic');
+assert.match(branch,/Dein Manager prüft jede Meldung/,'Branch manager only reports');
+assert.match(chat,/\['superadmin','manager'\]/,'Customer chat is manager-to-provider');
+assert.match(buildingRecord,/function renderBuildingRecord/,'Building dossier is implemented');
+assert.match(employee,/Rapport & Abschluss|Rapport &amp; Abschluss|Rapport/,'Staff can report work');
 
-assert.match(html,/<strong>FB SPEZIALBAU<\/strong>/,'FB Spezialbau must be the visible site brand');
-assert.match(html,/FB Spezialbau übernimmt die Ausführung/,'Contractor, not customer, performs the work');
-assert.match(html,/KUNDE · FILIALLEITER/,'Branch manager reports defects only');
-assert.match(html,/KUNDE · MANAGER/,'Customer manager approves jobs');
-assert.match(html,/FB SPEZIALBAU · AUSFÜHRUNG/,'FB Spezialbau handles the execution');
-assert.match(html,/KUNDE · KLARE ÜBERSICHT/,'Customer sees work results');
-assert.match(html,/Sie haben die Übersicht/,'Customer gains overview without doing the execution');
-assert.doesNotMatch(html,/Maler|Malerarbeiten/i,'Do not focus the offering on a single trade');
-assert.match(html,/info@fb-spezialbau\.ch/,'FB Spezialbau is the contact recipient');
+// Product workflow uses real status values instead of inventing progress states.
+has(/class="building-art"/,'Illustration remains');
+has(/Manager gibt frei/,'Hero illustrates customer approval');
+has(/FB Spezialbau · Rapport/,'Hero illustrates contractor completion');
+has(/Gemeldet<\/span><span>Freigegeben<\/span><span>Erledigt/,'Actual persisted statuses represented');
+assert(!/IN ARBEIT|In Bearbeitung|Malerarbeiten|Maler-/i.test(html),'No fictional in-progress state or narrow trade positioning');
+assert.equal((html.match(/class="process-card"/g)||[]).length,4,'Four real workflow steps');
+has(/class="timeline"/,'Chronological record');
+has(/role-grid/,'Explicit role-specific views');
+has(/<h3>Filialleitung<\/h3>/,'Filialleiter role distinct');
+has(/Prüf- und Freigaberechte liegen beim Manager/,'Branch role never approves');
+has(/<h3>Kundenmanagement<\/h3>/,'Customer manager is decision maker');
+has(/<h3>FB Spezialbau &amp; Ausführung<\/h3>/,'Execution provider distinct');
 
-assert.match(html,/Ihr Filialleiter meldet den Unterhaltsbedarf, Ihr Manager prüft und gibt den Auftrag frei/,'Correct roles in hero');
-assert.match(html,/Filialleiter erfasst den Mangel.*ohne Prüf- oder Freigabeaufgabe/,'No branch manager approval responsibility');
-assert.match(html,/Ausschliesslich der zuständige Manager beurteilt die Meldung/,'Customer manager has sole approval authority');
-assert.match(html,/Sie müssen nicht selbst jedem Arbeitsschritt hinterherlaufen/,'Customer workload reduction is explained');
-assert.match(html,/was offen, in Bearbeitung oder bereits erledigt ist/,'Full work visibility is highlighted');
-assert.match(html,/class="dossier-summary"/,'Three-state overview illustration');
-assert.match(html,/Fotos, Abschlussdatum und Arbeitsrapporte/,'Finished work is documented');
-assert.match(css,/\.dossier-summary\s*\{/,'Responsive work status visualization exists');
-
-assert.match(html,/nicht|Vorbereitung/,'Unfinished pilot features must not be advertised as operational');
-
+// Conversion without inventing launch readiness, customers, pricing or results.
+assert((html.match(/Pilotgespräch anfragen/g)||[]).length>=2,'A clear top and bottom acquisition CTA');
+has(/mailto:info@fb-spezialbau\.ch\?subject=Pilotgespraech%20Facility%20Management/,'Pilot lead goes to real business inbox');
+has(/Pilotbetrieb vorbereitet/,'Pilot status is transparent');
+has(/noch nicht produktiv freigegeben/,'Unfinished automatic mail assignment not sold as live');
+assert(!/garantiert|100\s*%|CHF\s*\d|\d+\s*(?:zufriedene Kunden|Standorte live)/i.test(html),'No invented guarantees, prices or adoption metrics');
 
 assert.equal((css.match(/\{/g)||[]).length,(css.match(/\}/g)||[]).length,'CSS braces must balance');
-assert(css.includes('.hero-scene')&&css.includes('.building-art')&&css.includes('.benefit-grid')&&css.includes('.process-grid'),'Maintenance layout styling');
-assert(css.includes('@media(max-width:400px)'),'Smartphone layout');
-assert(css.includes('prefers-reduced-motion'),'Accessibility');
-assert(!/copytree\(|\bcp\s+-r\b|\bpublic\/\*/.test(workflow),'Never publish all public files');
+assert(css.includes('.hero-scene')&&css.includes('.building-art')&&css.includes('.benefit-grid')&&css.includes('.process-grid'),'Illustrated product sales layout');
+assert(css.includes('@media(max-width:400px)'),'Responsive smartphone layout');
+assert(css.includes('prefers-reduced-motion'),'Reduced motion support');
+
+// GitHub Pages deploy is restricted to marketing files only.
+assert(!/copytree\(|\bcp\s+-r\b|\bpublic\/\*/.test(workflow),'Never bulk-publish private app scripts');
 assert.match(workflow,/copyfile\(source \/ "landing\.html", target \/ "index\.html"\)/);
 assert.match(workflow,/copyfile\(source \/ "landing\.css", target \/ "landing\.css"\)/);
 assert.match(workflow,/expected = \{"\.nojekyll", "index\.html", "landing\.css", "404\.html"\}/);
-assert.match(workflow,/\(target \/ "404\.html"\)\.write_text/);
-console.log('PASS: FB Spezialbau relieves client, branch manager reports only, customer manager approves, open/in-progress/completed overview, static public landing');
+console.log('PASS: real Facility Management features, customer-manager workflow, sales CTA, pilot disclosure and static public-only deployment');

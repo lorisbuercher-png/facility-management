@@ -51,3 +51,36 @@ export const notifications = sqliteTable('notifications', {
  index('notifications_recipient_time').on(t.ownerId,t.recipientEmail,t.createdAt),
  index('notifications_recipient_unread').on(t.ownerId,t.recipientEmail,t.readAt),
 ]);
+
+export const executionTeams = sqliteTable('execution_teams', {
+ id: text('id').primaryKey(),
+ ownerId:text('owner_id').notNull(),
+ name:text('name').notNull(),
+ createdAt:text('created_at').notNull(),
+ updatedAt:text('updated_at').notNull(),
+}, t=>[uniqueIndex('execution_teams_owner_name').on(t.ownerId,t.name)]);
+
+export const executionTeamMembers = sqliteTable('execution_team_members',{
+ ownerId:text('owner_id').notNull(),
+ teamId:text('team_id').notNull().references(()=>executionTeams.id,{onDelete:'cascade'}),
+ employeeGrantId:text('employee_grant_id').notNull().references(()=>teamAccess.id,{onDelete:'cascade'}),
+ createdAt:text('created_at').notNull(),
+},t=>[index('execution_team_members_grant').on(t.ownerId,t.employeeGrantId)]);
+
+export const taskEmailOutbox = sqliteTable('task_email_outbox',{
+ id:text('id').primaryKey(),
+ ownerId:text('owner_id').notNull(),
+ recipientEmail:text('recipient_email').notNull(),
+ companyId:text('company_id').notNull(),
+ taskId:text('task_id').notNull(),
+ kind:text('kind').notNull(),
+ teamName:text('team_name'),
+ companyName:text('company_name').notNull(),
+ locationName:text('location_name').notNull(),
+ status:text('status').notNull().default('pending'),
+ attempts:integer('attempts').notNull().default(0),
+ nextAttemptAt:text('next_attempt_at').notNull(),
+ createdAt:text('created_at').notNull(),
+ sentAt:text('sent_at'),
+ lastError:text('last_error'),
+},t=>[index('task_email_outbox_pending').on(t.status,t.nextAttemptAt),index('task_email_outbox_owner').on(t.ownerId,t.createdAt)]);

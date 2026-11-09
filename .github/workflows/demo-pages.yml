@@ -1,4 +1,4 @@
-name: Facility Demo veröffentlichen
+name: Facility Landingpage und Demo veröffentlichen
 
 on:
   push:
@@ -55,7 +55,7 @@ jobs:
               text = text.replace('href="/"', 'href="' + base + '"')
               path.write_text(text)
 
-          shutil.copyfile(target / "demo.html", target / "index.html")
+          shutil.copyfile(target / "landing.html", target / "index.html")
           (target / ".nojekyll").touch()
           PY
 

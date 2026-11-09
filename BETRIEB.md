@@ -12,6 +12,23 @@ Stand: 31. Oktober 2026. Dies ist eine konkrete Vorbereitung für die private Pr
 - Aktuelle Anmeldung: ChatGPT über Sites. Die App-Zuordnung und die private Website-Freigabe sind zwei getrennte Voraussetzungen. Manager ändern keine Website-Freigaben.
 - `FACILITY_ADMIN_EMAIL` ist eine Runtime-Konfiguration. Nicht in Dokumentation, Screenshots oder Quellcode durch Zugangsdaten ersetzen. Der Authentifizierungsaufbau vertraut den vom Sites-Gateway gesetzten Identitätsheadern.
 
+
+## Kundenchat: E-Mail-Hinweise einrichten (noch nicht aktiviert)
+
+Der Chat speichert Nachrichten serverseitig in \`customer_messages\` und legt weiterhin interne \`notifications\` an. Zusätzlich wurde ein best-effort E-Mail-Versand über die Resend-API vorbereitet.
+
+**Aktivierung durch Betreiber:**
+1. In Resend eine Versanddomain verifizieren, deren DNS-Records (SPF/DKIM) einrichten und einen API-Schlüssel mit Sendeberechtigung erstellen.
+2. Die folgenden Werte **als Secrets/Umgebungsvariablen des produktiven Workers** setzen, nicht in Git oder der Demo:
+   - \`RESEND_API_KEY\`: privater API-Schlüssel (Secret).
+   - \`FACILITY_CHAT_FROM_EMAIL\`: verifizierter Absender (z. B. \`Facility Management <no-reply@deine-domain.ch>\`).
+   - \`FACILITY_CHAT_ALERT_TO\`: optional eine oder mehrere Komma-getrennte interne Empfangsadressen für **Nachrichten vom Kundenmanager an das Ausführungsteam**. Ohne diese Variable erhält stattdessen \`FACILITY_ADMIN_EMAIL\` den Hinweis.
+   - \`FACILITY_PUBLIC_URL\`: vollständige produktive HTTPS-Basis-URL, aus der der Link zum geschützten \`/dashboard\` generiert wird. Ohne diese Variable enthält die E-Mail keinen Link.
+3. Eine Nachricht von einem Test-Manager im **echten, privaten Kundenchat** verfassen und die interne Postfach- und E-Mail-Benachrichtigung prüfen. Danach als Plattformverwaltung antworten und prüfen, ob **nur aktive Manager derselben Firma** eine E-Mail erhalten.
+4. Ausfalltest: API-Schlüssel vorübergehend im Testsystem deaktivieren. Die Nachricht muss gespeichert bleiben und unter \`Mitteilungen\` erscheinen. Versandfehler erscheinen in Serverlogs. Nicht auf automatische Wiederholungen oder erfolgreiche Zustellung schliessen: ein dauerhafter Retry-Worker/Outbox steht noch aus.
+
+**E-Mail-Datenschutz:** Die Nachricht selbst, Fotos, Rapporttexte und Auftragsdetails verlassen den geschützten Chat nicht per E-Mail. Die E-Mail nennt lediglich das Unternehmen und dass eine neue Nachricht vorliegt; Empfänger sehen sich gegenseitig nicht, da jede E-Mail einzeln verschickt wird. Beim Versand über den Provider werden Empfängeradressen und Unternehmenstitel verarbeitet; Datenschutz/AV-Vertrag und Versanddomain vor Kundenstart prüfen. In der GitHub-Demo wird kein Versand ausgeführt. Es gibt noch keine E-Mail-Zustellgarantie.
+
 ## Vor dem ersten echten Kunden erforderlich
 
 | Punkt | Konkrete Arbeit | Nachweis für Abschluss | Status |

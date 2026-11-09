@@ -1,1 +1,33 @@
 .record-intro{display:flex;justify-content:space-between;gap:25px;align-items:center;padding:34px 36px;margin-bottom:20px;border-radius:27px;background:linear-gradient(125deg,#e5eff5 0%,#f7fafc 53%,#e3eee6 100%);border:1px solid #dce7ec}.record-intro h2{font-size:clamp(30px,4vw,49px);line-height:1.04;letter-spacing:-.045em;margin:10px 0}.record-intro p{max-width:600px;line-height:1.6;color:#597084}.record-big-icon{display:grid;place-items:center;width:104px;height:104px;background:#ffffff8a;border-radius:28px;box-shadow:6px 14px 24px #385b7616;transform:rotate(-8deg);color:#648499}.record-big-icon svg{width:55px;height:55px}.record-picker{display:flex;gap:20px;justify-content:space-between;align-items:end;margin-bottom:18px}.record-picker>div:first-child{flex:1;max-width:450px}.record-location-label{display:block;font-size:12px;font-weight:700;margin:10px 0}.record-picker select{width:100%;min-height:47px}.record-address{display:flex;align-items:center;gap:10px;font-size:12px;max-width:46%}.record-address svg{width:20px;height:20px;color:#7b9ba9;flex-shrink:0}.record-address strong,.record-address span{display:block}.record-address span{color:var(--muted);margin-top:3px}.record-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:20px}.record-stats article{display:flex;flex-direction:column;gap:6px;padding:18px 20px}.record-stats small,.record-stats span{font-size:11px;color:var(--muted)}.record-stats strong{font-size:clamp(26px,3vw,36px);letter-spacing:-.04em}.record-main{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,290px);gap:18px;align-items:start}.record-main>.panel{padding:24px}.record-side{display:grid;gap:16px}.record-side .panel{padding:22px}.record-side h3{font-size:19px;margin:10px 0}.record-side p{color:var(--muted);font-size:12px;line-height:1.8;white-space:pre-wrap}.record-side small,.record-side strong{display:block;margin-top:7px}.record-divider{height:1px;background:var(--line);margin:18px 0}.record-fine{margin-top:14px}.record-filters{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.record-filters label{font-size:11px;color:var(--muted);flex:1;min-width:150px}.record-filters input,.record-filters select{display:block;margin-top:5px;width:100%;min-height:42px}.record-count{font-size:11px;color:var(--muted)}.record-timeline{display:grid;gap:0;margin-left:12px}.record-event{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;position:relative;padding-bottom:24px}.record-event:not(:last-child):before{content:'';position:absolute;left:21px;top:45px;bottom:-2px;width:1px;background:#dce5e9}.record-dot{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:#edf2fa;color:#557491;border:1px solid #e1e8f2;z-index:1}.record-dot.record-done{background:#e8f4ed;color:#358569}.record-dot svg{width:19px;height:19px}.record-event-body{border:1px solid #e4e9ed;border-radius:19px;padding:18px;background:#fff}.record-event-head{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:11px;color:var(--muted)}.record-pill{padding:5px 9px;background:#edf2f5;border-radius:999px}.record-event-body h3{font-size:18px;margin:9px 0 5px}.record-event-body>strong{font-size:12px}.record-event-body p{font-size:12px;line-height:1.75;color:var(--muted);margin-top:9px;white-space:pre-wrap}.record-meta{display:flex;align-items:center;gap:7px;margin-top:12px;font-size:11px;color:var(--muted)}.record-meta svg{width:16px;height:16px}.record-actions{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:15px}.record-actions button{min-height:36px}.record-actions span{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:11px}.record-actions span svg{width:14px;height:14px}.record-empty{padding:30px;color:var(--muted);font-size:13px;line-height:1.7}@media(max-width:1080px){.record-main{grid-template-columns:1fr}.record-side{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:750px){.record-intro{padding:24px}.record-big-icon{display:none}.record-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.record-picker{display:block}.record-address{max-width:none;margin-top:15px}.record-main>.panel{padding:18px}.record-side{grid-template-columns:1fr}}@media(max-width:450px){.record-stats{gap:8px}.record-stats article{padding:15px 12px}.record-event{grid-template-columns:30px 1fr;gap:8px}.record-dot{width:30px;height:30px;border-radius:10px}.record-dot svg{width:15px;height:15px}.record-event:not(:last-child):before{left:14px;top:33px}.record-event-body{padding:14px}}
+
+
+/* Unified building record: project overview and full history live together. */
+.record-overview{margin:0 0 20px}
+.record-overview .section-title{margin-bottom:14px}
+.record-overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px}
+.record-branch-card{
+ display:flex;flex-direction:column;align-items:flex-start;gap:9px;text-align:left;
+ padding:20px 22px;min-width:0;min-height:150px;width:100%;
+ border:1px solid var(--tenant-border,#e6e9f3);border-radius:19px;
+ background:var(--tenant-surface,#fff);
+ box-shadow:0 8px 23px rgba(38,48,82,.04);transition:transform .2s,box-shadow .2s,border-color .2s
+}
+.record-branch-card strong{font-size:16px;color:var(--tenant-text,#30405a);overflow-wrap:anywhere;line-height:1.4}
+.record-branch-card small{font-size:12px;color:var(--tenant-muted,#718196)}
+.record-branch-card>span{font-size:12px;color:var(--tenant-text,#45536b)}
+.record-branch-card em{font-style:normal;font-size:12px;font-weight:700;color:var(--tenant-link,#7464df);margin-top:auto}
+.record-branch-card:hover{border-color:var(--tenant-accent,#b6abf7);box-shadow:0 14px 28px rgba(38,48,82,.07);transform:translateY(-2px)}
+.record-report-summary{margin:13px 0;padding:12px 14px;background:var(--tenant-surface,#f6f8fb);border:1px solid var(--tenant-border,#e7e9f0);border-radius:13px}
+.record-report-summary>strong{display:block;font-size:12px;margin-bottom:6px}
+.record-report-summary p{white-space:pre-wrap;overflow-wrap:anywhere}
+.record-report-summary span{display:inline-block;margin-top:8px;color:var(--tenant-link,#6659c0);font-size:11px;font-weight:700}
+.record-photos{display:flex;flex-wrap:wrap;gap:9px;margin:13px 0}
+.record-photos .photo-thumb{min-width:0}
+.record-photos .photo-thumb img{object-fit:cover}
+@media(max-width:720px){
+ .record-overview-grid{grid-template-columns:1fr}
+ .record-branch-card{min-height:110px;padding:16px}
+ .record-photos{gap:7px}
+ .record-photos .photo-thumb{max-width:calc(50% - 4px)}
+}
+@media(prefers-reduced-motion:reduce){.record-branch-card{transition:none}.record-branch-card:hover{transform:none}}

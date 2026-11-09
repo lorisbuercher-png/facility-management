@@ -27,7 +27,7 @@ const isEmail = (s:string) => s.length<=254 && /^[^@\s,;<>]+@[^@\s,;<>]+\.[^@\s,
 
 export function chatEmailRecipients(config:ChatEmailConfig, input:ChatEmailInput):string[]{
   // Only a server-configured address can override the platform-owner inbox.
-  const configuredTeam = (config.FACILITY_CHAT_ALERT_TO||'').split(/[,;\n]/).map(normalEmail).filter(Boolean);
+  const configuredTeam = (config.FACILITY_CHAT_ALERT_TO||'').split(/[,;\n]/).map(normalEmail).filter(isEmail);
   const source = input.authorRole==='manager' && configuredTeam.length ? configuredTeam : input.recipientEmails;
   const unique = new Set<string>();
   for(const entry of source){

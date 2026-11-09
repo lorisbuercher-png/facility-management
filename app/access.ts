@@ -13,7 +13,7 @@ export function projectState(state:any,grant:Grant){
   const w=state.workspaces[c.id]||{locations:[],tasks:[]};
   let tasks=w.tasks,locations=w.locations;
   if(grant.role==='branch'){locations=locations.filter((l:any)=>l.id===grant.location_id);tasks=tasks.filter((t:any)=>t.locationId===grant.location_id)}
-  if(grant.role==='employee'){tasks=tasks.filter((t:any)=>['Freigegeben','Erledigt'].includes(t.status));const ids=new Set(tasks.map((t:any)=>t.locationId));locations=locations.filter((l:any)=>ids.has(l.id));if(!tasks.length)continue}
+  if(grant.role==='employee'){tasks=tasks.filter((t:any)=>['Freigegeben','Erledigt'].includes(t.status)&&t.assignment?.employeeGrantId===grant.id);const ids=new Set(tasks.map((t:any)=>t.locationId));locations=locations.filter((l:any)=>ids.has(l.id));if(!tasks.length)continue}
   companies.push({...c,contact:'',users:0,locations:locations.length});workspaces[c.id]={locations,tasks};
  }
  return {companies,workspaces,events:[]};

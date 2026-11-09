@@ -17,6 +17,7 @@ const adminMessage={...managerMessage,messageId:'m-2',authorRole:'superadmin',ac
 assert.equal(alerts.chatEmailRecipients(configuration,managerMessage).join(','),'team@facility.test,owner@facility.test','manager messages go to configured execution inboxes');
 assert.equal(alerts.chatEmailRecipients(configuration,adminMessage).join(','),'manager@a.test,manager2@a.test','owner replies go to only server-selected tenant managers');
 assert.equal(alerts.chatEmailRecipients({...configuration,FACILITY_CHAT_ALERT_TO:''},managerMessage).join(','),'owner-login@test.ch','fallback owner address');
+assert.equal(alerts.chatEmailRecipients({...configuration,FACILITY_CHAT_ALERT_TO:'invalid,also-invalid'},managerMessage).join(','),'owner-login@test.ch','invalid team address never suppresses fallback owner');
 assert.equal(alerts.chatEmailRecipients({...configuration,FACILITY_CHAT_ALERT_TO:'MANAGER@A.TEST,team@facility.test'},managerMessage).join(','),'team@facility.test','do not notify sender');
 const sample=alerts.buildChatEmail(configuration,{...managerMessage,companyName:'A & <script>alert(1)</script>'});
 assert.match(sample.text,/https:\/\/facility\.example\.test\/dashboard/);

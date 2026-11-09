@@ -39,3 +39,22 @@
   .demo-mode-banner .demo-employee-entry,
   .demo-mode-banner .demo-employee-current{font-size:12px;min-height:44px}
 }
+
+/* Always show a recoverable error instead of an indefinitely blank demo. */
+.demo-startup-error{
+  position:relative;
+  z-index:30;
+  width:min(600px,calc(100% - 36px));
+  margin:28px auto;
+  padding:28px;
+  border:1px solid #edd8d1;
+  background:#fff;
+  color:#273951;
+  border-radius:20px;
+  box-shadow:0 15px 38px rgba(39,57,81,.1);
+}
+.demo-startup-error h2{font-size:22px;line-height:1.25;margin:0 0 12px}
+.demo-startup-error p{line-height:1.6;color:#62728b;margin:0 0 20px}
+.demo-startup-error>div{display:flex;flex-wrap:wrap;gap:12px}
+.demo-startup-error button{min-height:44px;white-space:normal}
+@media(max-width:720px){.demo-startup-error{padding:19px;margin:18px auto}.demo-startup-error button{flex:1 1 100%}}

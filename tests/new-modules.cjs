@@ -43,7 +43,7 @@ c.companyNow=()=>company;
 c.drawWorkspace=()=>c.window.renderBuildingRecord(company,dossier);
 c.window.openBuildingRecord('a','');
 assert.equal(c.workspaceTab,'record','dashboard deep links open the single building-record tab');
-assert.match($('#workspace-content').innerHTML,/Alle Filialen \\(2\\)/);
+assert.match($('#workspace-content').innerHTML,/Alle Filialen \(2\)/);
 assert.match($('#workspace-content').innerHTML,/Anderer Standort/,'all-locations mode includes other company branches');
 assert.match($('#workspace-content').innerHTML,/record-branch-card/,'project overview now lives inside building record');
 c.workspaceTab='dashboard';

@@ -511,3 +511,165 @@ dialog::backdrop{-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);bac
   .customer-ambience .project-preview{padding:12px}
   .customer-ambience .project-preview-item{gap:9px}
 }
+
+
+/*
+ * Customer identity: one full-width logo banner, not a small square on the
+ * left. The original logo proportions remain intact in every tenant theme.
+ * Applies to customer/branch dashboards and company previews, not staff UI.
+ */
+main.customer-ambience .workspace-top{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:flex-start;
+  width:100%;
+  min-width:0;
+  gap:14px;
+}
+main.customer-ambience .workspace-top > #back-platform{
+  align-self:flex-start;
+}
+main.customer-ambience .workspace-top .workspace-identity.customer-brand-banner{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  grid-template-rows:auto auto;
+  align-items:center;
+  justify-items:stretch;
+  gap:10px 14px;
+  flex:none;
+  box-sizing:border-box;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  margin:0;
+  padding:18px 24px 15px;
+  border:1px solid var(--tenant-border,#e5eaf4);
+  border-radius:22px;
+  background:var(--tenant-surface,#fff);
+  box-shadow:0 12px 32px rgba(39,55,93,.055);
+}
+main.customer-ambience .workspace-top .customer-brand-banner > .logo{
+  grid-column:1 / -1;
+  grid-row:1;
+  display:flex;
+  flex:none;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  height:116px;
+  min-height:116px;
+  margin:0;
+  padding:10px;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  overflow:hidden;
+}
+main.customer-ambience .workspace-top .customer-brand-banner > .logo img{
+  display:block;
+  width:auto;
+  height:auto;
+  max-width:min(100%,620px);
+  max-height:104px;
+  object-fit:contain;
+  object-position:center;
+}
+main.customer-ambience .workspace-top .customer-brand-banner > .logo span{
+  display:block;
+  width:auto;
+  max-width:100%;
+  font-size:clamp(32px,4.4vw,58px);
+  font-weight:800;
+  line-height:1.12;
+  letter-spacing:-.035em;
+  text-align:center;
+  overflow-wrap:anywhere;
+}
+main.customer-ambience .workspace-top .customer-brand-banner > .badge{
+  grid-column:1;
+  grid-row:2;
+  justify-self:start;
+  align-self:center;
+  margin:0;
+  min-width:0;
+}
+main.customer-ambience .workspace-top .customer-brand-banner > .ambience-actions{
+  grid-column:2;
+  grid-row:2;
+  justify-self:end;
+  align-self:center;
+  margin:0;
+  min-width:0;
+  max-width:100%;
+}
+@media(max-width:720px){
+  main.customer-ambience .workspace-top .workspace-identity.customer-brand-banner{
+    padding:14px 16px 12px;
+    gap:9px 10px;
+    border-radius:18px;
+  }
+  main.customer-ambience .workspace-top .customer-brand-banner > .logo{
+    width:100%;
+    min-width:0;
+    height:92px;
+    min-height:92px;
+    padding:6px;
+  }
+  main.customer-ambience .workspace-top .customer-brand-banner > .logo img{
+    max-height:78px;
+  }
+  main.customer-ambience .workspace-top .customer-brand-banner > .logo span{
+    font-size:clamp(25px,6.7vw,42px);
+  }
+}
+@media(max-width:500px){
+  /* Override historical 185px member logo cap and small-screen flex sizing. */
+  .member-mode main.customer-ambience .workspace-top .workspace-identity.customer-brand-banner,
+  main.customer-ambience .workspace-top .workspace-identity.customer-brand-banner{
+    display:grid;
+    flex:none;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    justify-content:stretch;
+    padding:13px 14px 12px;
+  }
+  main.customer-ambience .workspace-top .customer-brand-banner > .logo{
+    flex:none;
+    width:100%;
+    min-width:0;
+    height:80px;
+    min-height:80px;
+    padding:5px;
+  }
+  main.customer-ambience .workspace-top .customer-brand-banner > .logo img{
+    max-height:68px;
+  }
+  main.customer-ambience .workspace-top .customer-brand-banner > .ambience-actions{
+    width:auto;
+    justify-content:flex-end;
+  }
+  main.customer-ambience .workspace-top .customer-brand-banner > .ambience-actions button{
+    min-height:42px;
+    font-size:11px;
+    white-space:normal;
+  }
+}
+@media(max-width:370px){
+  main.customer-ambience .workspace-top .workspace-identity.customer-brand-banner{
+    grid-template-columns:minmax(0,1fr);
+  }
+  main.customer-ambience .workspace-top .customer-brand-banner > .ambience-actions{
+    grid-column:1;
+    grid-row:3;
+    justify-self:stretch;
+    width:100%;
+  }
+  main.customer-ambience .workspace-top .customer-brand-banner > .ambience-actions button{
+    width:100%;
+    justify-content:center;
+  }
+}

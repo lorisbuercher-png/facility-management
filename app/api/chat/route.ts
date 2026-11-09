@@ -2,6 +2,7 @@ import { env } from 'cloudflare:workers';
 import { roleFromIdentity,type Grant } from '../../access';
 import { canAccessConversation,validateChatMessage } from '../../customer-chat';
 import { chatNotifications,storeNotifications,type NotificationRecipient } from '../../notifications';
+import { sendChatEmailAlerts } from '../../chat-email';
 export const dynamic='force-dynamic';
 const reply=(body:unknown,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});
 type Viewer={id:string; ownerId:string; role:string; companyId?:string|null; name:string; email:string; grant?:Grant};
@@ -49,10 +50,23 @@ export async function POST(request:Request){
  viewer!.ownerId,input.companyId,viewer!.role,viewer!.ownerId,viewer!.email,input.companyId,viewer!.grant?.id||'',viewer!.grant?.revision||0
  ).run();
  if(insert.meta.changes!==1)return reply({error:'Zugang oder Unternehmen wurde inzwischen geändert. Bitte neu laden.'},409);
+ let recipientEmails:string[]=[];
  try{
   const team=await env.DB.prepare('SELECT email,name,role,company_id,location_id,active FROM team_access WHERE owner_id = ? AND active = 1').bind(viewer!.ownerId).all<NotificationRecipient>();
   const drafts=chatNotifications({ownerEmail:(env as any).FACILITY_ADMIN_EMAIL,companyId:input.companyId,taskId:input.taskId||null,actorEmail:viewer!.email},input.message.trim(),viewer!.role,team.results);
+  recipientEmails=drafts.map(item=>item.recipientEmail);
   await storeNotifications(env.DB,viewer!.ownerId,drafts,now);
- }catch(e){console.error('Chat notification delivery could not be queued:',e instanceof Error?e.message:'unknown');}
+ }catch(e){console.error('Chat in-app notification could not be saved:',e instanceof Error?e.message:'unknown');}
+ // Sending is deliberately after the authoritative INSERT. A failed email
+ // never rolls back a stored customer message or its in-app notification.
+ try{
+  const company=state.companies.find((c:any)=>c.id===input.companyId);
+  const sent=await sendChatEmailAlerts(env as any,{
+   messageId:id,companyName:company?.name||'Kundenunternehmen',
+   authorRole:viewer!.role as 'manager'|'superadmin',
+   actorEmail:viewer!.email,recipientEmails,
+  });
+  if(sent.failed)console.error('Chat email alert failed for '+sent.failed+' of '+sent.recipients+' recipients.');
+ }catch(e){console.error('Chat email alert failed:',e instanceof Error?e.message:'unknown');}
  return reply({message:{id,companyId:input.companyId,taskId:input.taskId||null,authorRole:viewer!.role,authorName:viewer!.name,body:input.message.trim(),createdAt:now}},201);
 }

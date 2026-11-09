@@ -1,2 +1,7 @@
-# Nur für lokale Entwicklung
+# Nur für lokale Entwicklung. Keine echten Secrets in Git eintragen.
 FACILITY_ADMIN_EMAIL=seedy@sites.test
+# E-Mail-Hinweise zum Kundenchat (optional, erst nach Domain-Verifizierung):
+RESEND_API_KEY=
+FACILITY_CHAT_FROM_EMAIL=
+FACILITY_CHAT_ALERT_TO=
+FACILITY_PUBLIC_URL=

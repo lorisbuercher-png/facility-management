@@ -1,19 +1,26 @@
-name: Code pruefen
+name: Code prüfen
 
-on: on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   check:
+    name: Tests, TypeScript und Build
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-      - uses: pnpm/action-setup@v4
+          node-version: "22"
+          cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - run: pnpm typecheck

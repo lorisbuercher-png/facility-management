@@ -47,7 +47,8 @@ function dashboardUrl(config:ChatEmailConfig):string|null{
     return new URL('/dashboard',url.origin).toString();
   }catch{return null}
 }
-const safeHtml=(s:string)=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
+const htmlEntities:Record<string,string>={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+const safeHtml=(s:string)=>s.replace(/[&<>"']/g,c=>htmlEntities[c]??c);
 
 export function buildChatEmail(config:ChatEmailConfig,input:ChatEmailInput){
   const company=input.companyName.replace(/[\r\n\t]/g,' ').trim().slice(0,100) || 'Unternehmen';

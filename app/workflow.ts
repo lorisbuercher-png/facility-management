@@ -1,9 +1,9 @@
-export type Principal={id:string;ownerId:string;email:string;name:string;role:'superadmin'|'manager'|'branch'|'employee';companyId?:string|null;locationId?:string|null};
+export type Principal={id:string;ownerId:string;email:string;name:string;role:'superadmin'|'manager'|'branch'|'employee';companyId?:string|null;locationId?:string|null;grantId?:string};
 export function effectiveStatus(t:any){return ['Offen','Geplant','In Arbeit'].includes(t.status)?'Gemeldet':t.status}
 const text=(v:any,max:number,required=false)=>typeof v==='string'&&v.length<=max&&(!required||!!v.trim());
 export function applyWorkflow(state:any,input:any,user:Principal,now:string,id:string){
  const fail=(error:string,status=400)=>({error,status});
- if(!input||typeof input!=='object'||typeof input.companyId!=='string'||!['create','edit','approve','reject','schedule','complete'].includes(input.action))return fail('Ungültige Aktion.');
+ if(!input||typeof input!=='object'||typeof input.companyId!=='string'||!['create','edit','approve','reject','schedule','assign','accept','complete'].includes(input.action))return fail('Ungültige Aktion.');
  const c=state?.companies?.find((c:any)=>c.id===input.companyId),w=state?.workspaces?.[input.companyId];
  if(!c||!w)return fail('Unternehmen nicht gefunden.',404);
  if(user.role!=='superadmin'&&user.role!=='employee'&&user.companyId!==c.id)return fail('Kein Zugriff auf dieses Unternehmen.',403);
@@ -14,7 +14,7 @@ export function applyWorkflow(state:any,input:any,user:Principal,now:string,id:s
  const t=input.action==='create'?null:w.tasks.find((t:any)=>t.id===input.taskId);
  if(input.action!=='create'&&!t)return fail('Auftrag nicht gefunden.',404);
  if(t&&(!Number.isSafeInteger(input.taskRevision)||input.taskRevision!==(t.workflowRevision||0)))return fail('Der Auftrag wurde inzwischen geändert. Bitte Daten aktualisieren.',409);
- if(t&&user.role==='employee'&&effectiveStatus(t)!=='Freigegeben')return fail('Kein Zugriff auf diesen Auftrag.',403);
+ if(t&&user.role==='employee'&&(effectiveStatus(t)!=='Freigegeben'||t.assignment?.employeeGrantId!==user.grantId))return fail('Dieser Auftrag ist dir nicht zugeteilt oder nicht freigegeben.',403);
  if(t&&(t.history?.length||0)>=2000)return fail('Maximale Anzahl Verlaufseinträge erreicht.',409);
  let target=t,actionLabel='',note='';
  if(input.action==='create'||input.action==='edit'){
@@ -26,12 +26,12 @@ export function applyWorkflow(state:any,input:any,user:Principal,now:string,id:s
    target={id,title:input.title.trim(),description:input.description.trim(),priority:input.priority,locationId,status:'Gemeldet',due:input.due,assignee:input.assignee.trim(),createdAt:now,createdById:user.id,updatedAt:now,workflowRevision:1,history:[]};w.tasks.unshift(target);actionLabel='Mangel gemeldet';
   }else{Object.assign(target,{title:input.title.trim(),description:input.description.trim(),priority:input.priority,due:input.due,assignee:input.assignee.trim()});actionLabel='Auftrag bearbeitet'}
  }else if(input.action==='approve'||input.action==='reject'){
-  if(user.role!=='manager')return fail('Nur der zuständige Manager darf freigeben oder ablehnen.',403);
+  if(!['manager','superadmin'].includes(user.role))return fail('Nur der Manager oder die Plattformverwaltung darf freigeben oder ablehnen.',403);
   if(effectiveStatus(t)!=='Gemeldet')return fail('Nur gemeldete Mängel können geprüft werden.',409);
   if(!text(input.note??'',2000,input.action==='reject'))return fail('Bitte eine Begründung für die Ablehnung eingeben.');
   note=(input.note||'').trim();actionLabel=input.action==='approve'?'Mangel freigegeben':'Mangel abgelehnt';
  }else if(input.action==='schedule'){
-  if(user.role!=='manager')return fail('Nur der zuständige Manager darf Termine freigeben.',403);
+  if(!['manager','superadmin'].includes(user.role))return fail('Nur der Manager oder die Plattformverwaltung darf Termine freigeben.',403);
   if(effectiveStatus(t)!=='Freigegeben')return fail('Termine können nur für freigegebene Arbeiten bestätigt werden.',409);
   if(!text(input.due,10,true)||!/^\d{4}-\d{2}-\d{2}$/.test(input.due)||Number.isNaN(Date.parse(input.due))||new Date(input.due+'T12:00:00Z').toISOString().slice(0,10)!==input.due)return fail('Bitte ein gültiges Termindatum wählen.');
   if(input.startTime!==undefined&&input.startTime!==''&&(typeof input.startTime!=='string'||!/^([01]\d|2[0-3]):[0-5]\d$/.test(input.startTime)))return fail('Bitte eine gültige Startzeit eingeben.');
@@ -39,9 +39,26 @@ export function applyWorkflow(state:any,input:any,user:Principal,now:string,id:s
   if(minutes!==null&&(!Number.isInteger(minutes)||minutes<15||minutes>720))return fail('Geplante Dauer: 15 bis 720 Minuten.');
   if(!text(input.note??'',2000))return fail('Bitte die Terminnotiz prüfen.');
   note=[input.due,input.startTime||'',(input.note||'').trim()].filter(Boolean).join(' · ');target.due=input.due;target.startTime=input.startTime||'';target.durationMinutes=minutes;target.scheduleApproval={date:input.due,startTime:target.startTime,durationMinutes:minutes,at:now,userId:user.id,userName:user.name};actionLabel='Termin freigegeben';
+ }else if(input.action==='assign'){
+  if(user.role!=='superadmin')return fail('Nur die Plattformverwaltung darf ein Ausführungsteam zuteilen.',403);
+  if(effectiveStatus(t)!=='Freigegeben')return fail('Nur freigegebene Aufträge können zugeteilt werden.',409);
+  const a=input.assignment;
+  if(!a||!text(a.teamId,100,true)||!text(a.teamName,70,true)||!text(a.employeeGrantId,100,true)||!text(a.employeeName,100,true)||!text(a.employeeEmail,254,true))return fail('Bitte ein aktives Ausführungsteam und einen Mitarbeiter wählen.',400);
+  if(t.assignment?.employeeGrantId===a.employeeGrantId&&t.assignment?.teamId===a.teamId)return fail('Dieser Mitarbeiter ist bereits für den Auftrag eingeteilt.',409);
+  target.assignment={teamId:a.teamId,teamName:a.teamName,employeeGrantId:a.employeeGrantId,employeeName:a.employeeName,employeeEmail:a.employeeEmail.toLowerCase(),assignedAt:now,acceptedAt:null};
+  target.assignee=a.employeeName.slice(0,100);
+  actionLabel='Auftrag zugeteilt';
+  note=a.teamName+' · '+a.employeeName;
+ }else if(input.action==='accept'){
+  if(user.role!=='employee')return fail('Nur der zugeteilte Mitarbeiter darf einen Auftrag annehmen.',403);
+  if(effectiveStatus(t)!=='Freigegeben'||t.assignment?.employeeGrantId!==user.grantId)return fail('Auftrag nicht zugeteilt.',403);
+  if(t.assignment.acceptedAt)return fail('Auftrag bereits angenommen.',409);
+  target.assignment.acceptedAt=now;
+  actionLabel='Auftrag angenommen';
  }else{
   if(user.role!=='employee')return fail('Nur Mitarbeiter dürfen freigegebene Arbeiten abschliessen.',403);
   if(effectiveStatus(t)!=='Freigegeben')return fail('Nur freigegebene Arbeiten können abgeschlossen werden.',409);
+  if(!t.assignment?.acceptedAt)return fail('Bitte den zugeteilten Auftrag zuerst annehmen.',409);
   if(!text(input.reportText,5000,true)||typeof input.hours!=='number'||!Number.isFinite(input.hours)||input.hours<=0||input.hours>1000||Math.abs(Math.round(input.hours*100)-input.hours*100)>.00001)return fail('Bitte Rapporttext und gültige Stunden (maximal zwei Dezimalstellen) eingeben.');
   target.report={text:input.reportText.trim(),hours:input.hours,userId:user.id,userName:user.name,at:now};actionLabel='Arbeit erledigt';
  }

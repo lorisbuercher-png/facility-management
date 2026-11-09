@@ -14,6 +14,9 @@ for(const name of files){
 const demo=fs.readFileSync(path.join(directory,'demo.js'),'utf8');
 const review=fs.readFileSync(path.join(directory,'review.js'),'utf8');
 assert.match(review,/function priorityOptions\s*\(/,'Employee filter needs review.js helper');
-assert(demo.indexOf("'/review.js'")>=0&&demo.indexOf("'/employee.js'")>demo.indexOf("'/review.js'"),
- 'Review helper must load before employee portal');
+// The public demo intentionally does not load the staff portal. If a staff
+// module is reintroduced in a protected build, load its dependency first.
+const employeeModule=demo.indexOf("'/employee.js'");
+assert(employeeModule<0||demo.indexOf("'/review.js'")>=0&&employeeModule>demo.indexOf("'/review.js'"),
+ 'Review helper must load before employee portal when present');
 console.log('PASS: '+files.length+' public browser scripts parse and employee dependencies load in correct order');

@@ -342,3 +342,39 @@ h1,h2,h3,p{overflow-wrap:break-word}
 @media(prefers-reduced-transparency:reduce),(prefers-contrast:more){
  .site-header,.scene-note,.scene-frame{background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none}
 }
+
+
+/* A compact, static work-status legend reinforces the completed-work
+   overview. It contains illustrative labels only – no customer data. */
+.dossier-summary{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin:0 0 12px;
+}
+.dossier-summary span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-width:0;
+  border-radius:10px;
+  padding:10px 6px;
+  font-size:10px;
+  font-weight:750;
+  line-height:1.35;
+  text-align:center;
+  color:#918eaa;
+  background:#f6f3fa;
+}
+.dossier-summary span:nth-child(2){
+  background:#f0edff;
+  color:#8374ca;
+}
+.dossier-summary span:nth-child(3){
+  background:#e8f5ed;
+  color:#669b7f;
+}
+@media(max-width:400px){
+  .dossier-summary{gap:5px}
+  .dossier-summary span{font-size:9px;padding:9px 3px}
+}

@@ -24,7 +24,7 @@ assert.equal(new URL(navigated).searchParams.get('role'),'employee');
 assert(demo.includes('href="?role=employee"'),'Direct employee test entry must be available');
 
 function renderEmployee(role='employee'){
- const fixture=String.raw\`
+ const fixture=String.raw`
  const window={FACILITY_USER:{role:ROLE,companyId:'c',locationId:'l'}};
  function node(){return {classList:{add(){},remove(){},toggle(){}},style:{},setAttribute(){},innerHTML:'',value:'',textContent:'',placeholder:'',onclick:null,onchange:null,oninput:null,querySelectorAll(){return []},querySelector(){return null},focus(){}}}
  const elements={},document={body:node(),querySelectorAll(){return []}};
@@ -39,7 +39,7 @@ function renderEmployee(role='employee'){
  function clearAmbience(){};function closeMenu(){};function taskDetail(){};
  function flowDecision(){};function reportPrint(){};
  let render=()=>{},renderGlobalTasks=()=>{},drawWorkspace=()=>{},redrawAfterFlow=()=>{},tenant=()=>{},openGlobalWork=()=>{},workspaceId=null,page='overview';
- \`.replace('ROLE',JSON.stringify(role));
+ `.replace('ROLE',JSON.stringify(role));
  const src=fixture+'\n'+map+'\n'+employee+'\nresult={heading:elements["#heading"]?.textContent,nav:elements[".sidebar .nav"]?.innerHTML,results:elements["#employee-results"]?.innerHTML,content:elements["#content"]?.innerHTML};';
  const ctx={result:null};
  vm.runInNewContext(src,ctx);

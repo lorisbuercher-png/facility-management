@@ -13,8 +13,17 @@ export async function POST(request:Request){
  if(!env.DB)return reply({error:'Datenbank nicht verfügbar.'},503);
  let user:Principal,grant:Grant|undefined;
  if(identity.role==='superadmin')user={id:identity.id!,ownerId:identity.id!,email:identity.email!,name:identity.email!,role:'superadmin'};
- else{const g=await env.DB.prepare('SELECT * FROM team_access WHERE email = ? AND active = 1').bind(identity.email).first<Grant>();if(!g)return reply({error:'Kein aktiver Zugang vorhanden.'},403);grant=g;user={id:identity.id!,ownerId:g.owner_id,email:g.email,name:g.name,role:g.role,companyId:g.company_id,locationId:g.location_id};}
+ else{const g=await env.DB.prepare('SELECT * FROM team_access WHERE email = ? AND active = 1').bind(identity.email).first<Grant>();if(!g)return reply({error:'Kein aktiver Zugang vorhanden.'},403);grant=g;user={id:identity.id!,ownerId:g.owner_id,email:g.email,name:g.name,role:g.role,companyId:g.company_id,locationId:g.location_id,grantId:g.id};}
  const row=await env.DB.prepare('SELECT payload, revision FROM platform_state WHERE owner_id = ?').bind(user.ownerId).first<{payload:string,revision:number}>();if(!row)return reply({error:'Noch keine Unternehmensdaten vorhanden.'},404);
+ if(input.action==='assign'){
+  if(user.role!=='superadmin')return reply({error:'Nur die Plattformverwaltung darf Aufträge zuteilen.'},403);
+  if(typeof input.teamId!=='string'||input.teamId.length>100||typeof input.employeeId!=='string'||input.employeeId.length>100)return reply({error:'Team und Mitarbeiter fehlen.'},400);
+  // The team membership and employee identity come ONLY from current DB grants.
+  // No client-supplied email address can be used as a recipient.
+  const matched=await env.DB.prepare("SELECT e.id AS employeeId,e.name AS employeeName,e.email AS employeeEmail,t.id AS teamId,t.name AS teamName FROM execution_team_members m JOIN execution_teams t ON t.id=m.team_id AND t.owner_id=m.owner_id JOIN team_access e ON e.id=m.employee_grant_id AND e.owner_id=m.owner_id WHERE m.owner_id=? AND m.team_id=? AND m.employee_grant_id=? AND e.role='employee' AND e.active=1").bind(user.ownerId,input.teamId,input.employeeId).first<{employeeId:string;employeeName:string;employeeEmail:string;teamId:string;teamName:string}>();
+  if(!matched)return reply({error:'Das Ausführungsteam oder der Mitarbeiter ist nicht mehr aktiv.'},409);
+  input.assignment={employeeGrantId:matched.employeeId,employeeName:matched.employeeName,employeeEmail:matched.employeeEmail,teamId:matched.teamId,teamName:matched.teamName};
+ }
  const state=JSON.parse(row.payload),now=new Date().toISOString();const result=applyWorkflow(state,input,user,now,crypto.randomUUID());if('error' in result)return reply({error:result.error},result.status);
  const task=state.workspaces[input.companyId].tasks.find((t:any)=>t.id===result.taskId);
  const bucket=(env as any).BUCKET as R2Bucket|undefined;
@@ -34,8 +43,9 @@ export async function POST(request:Request){
  const payload=JSON.stringify(state);if(payload.length>4_000_000){if(bucket)await Promise.all(uploaded.map(key=>bucket.delete(key)));return reply({error:'Maximale Datenmenge erreicht.'},413)}
  // Recheck the exact authorising grant atomically, including changes during uploads.
  const guard=grant?{sql:' AND EXISTS (SELECT 1 FROM team_access WHERE id = ? AND owner_id = ? AND email = ? AND role = ? AND company_id IS ? AND location_id IS ? AND active = 1 AND revision = ?)',args:[grant.id,grant.owner_id,grant.email,grant.role,grant.company_id,grant.location_id,grant.revision]}:{sql:'',args:[]};
+ const assigned=input.action==='assign'?{sql:" AND EXISTS (SELECT 1 FROM execution_team_members m JOIN execution_teams t ON t.id=m.team_id AND t.owner_id=m.owner_id JOIN team_access e ON e.id=m.employee_grant_id AND e.owner_id=m.owner_id WHERE m.owner_id=? AND m.team_id=? AND m.employee_grant_id=? AND e.role='employee' AND e.active=1)",args:[user.ownerId,input.teamId,input.employeeId]}:{sql:'',args:[]};
  let saved;
- try{saved=await env.DB.prepare('UPDATE platform_state SET payload = ?, revision = revision + 1, updated_at = ? WHERE owner_id = ? AND revision = ?'+guard.sql).bind(payload,now,user.ownerId,row.revision,...guard.args).run()}
+ try{saved=await env.DB.prepare('UPDATE platform_state SET payload = ?, revision = revision + 1, updated_at = ? WHERE owner_id = ? AND revision = ?'+guard.sql+assigned.sql).bind(payload,now,user.ownerId,row.revision,...guard.args,...assigned.args).run()}
  catch{
   // A lost DB response may follow a committed write. Never delete referenced photos.
   if(bucket&&uploaded.length){try{

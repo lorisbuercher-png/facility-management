@@ -18,7 +18,7 @@ for(const role of ['manager','branch']){
  c.tenant('c2');assert.equal(c.workspaceId,'c1','cannot switch to another company through tenant navigation');
  c.page='companies';c.render();assert.equal(c.workspaceId,'c1');assert.equal(c.workspaceTab,'dashboard');assert.equal(f.originalRenders,0);
  c.renderGlobalTasks();assert.equal(c.workspaceTab,'tasks');assert.equal(elements['#workspace-content .section-title h2'].textContent,role==='manager'?'Arbeiten aller Filialen':'Meine Mängel');
- if(role==='manager'){f.buttons.find(b=>b.dataset.customerNav==='locations').onclick();assert.equal(c.workspaceTab,'locations')}else{assert.deepEqual(f.buttons.map(b=>b.dataset.customerNav),['dashboard','tasks']);assert(!elements['.sidebar .nav'].innerHTML.includes('Rapporte'));}
+ if(role==='manager'){assert(f.buttons.some(b=>b.dataset.customerNav==='record'),'building record remains in navigation');assert(!f.buttons.some(b=>b.dataset.customerNav==='project-status'),'duplicate project-status tab is removed');f.buttons.find(b=>b.dataset.customerNav==='locations').onclick();assert.equal(c.workspaceTab,'locations')}else{assert.deepEqual(f.buttons.map(b=>b.dataset.customerNav),['dashboard','tasks']);assert(!elements['.sidebar .nav'].innerHTML.includes('Rapporte'));}
  elements['#global-search'].oninput({target:{value:'Basel'}});assert.equal(c.workspaceTab,'tasks');assert.equal(c.workspaceSearch,'Basel');assert.equal(elements['#global-search'].value,'Basel');
  c.data.companies=[];c.render();assert.equal(c.workspaceId,null);assert.match(elements['#content'].innerHTML,/nicht verfügbar/);
 }

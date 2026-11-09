@@ -94,6 +94,14 @@ Der vorhandene Filterablauf wurde durchgesehen; die Gesamtübersicht normalisier
 
 Ein Manager ist genau einem Unternehmen zugeordnet (`company_id`) und sieht alle Filialen, Mängel und Rapporte dieser Firma. Die State-API liefert keine anderen Unternehmen. Nach der Anmeldung unter `/dashboard` öffnet sich unmittelbar das zugeordnete Firmendashboard. Die Kundennavigation enthält Dashboard, Filialen, Arbeiten aller Filialen, Rapporte und Filialleiter gemäss aktivierten Modulen. Es gibt keine Unternehmensauswahl oder Rückkehr in die Plattformverwaltung. Der Filialfilter begrenzt die Arbeitsliste bei Bedarf auf einen Standort. Superadmin und ausführende Mitarbeiter behalten ihre übergreifenden Ansichten.
 
+## Einheitliche Gebäudeakte für Manager
+
+Im Manager-Kundenportal sind **Projektstand** und **Gebäudeakte** zu einer einzigen Navigation **Gebäudeakte** zusammengefasst. Sie führt die Projekt-/Filialübersicht, aggregierte Kennzahlen (offen, erledigt, Rapportstunden), chronologische Statusänderungen, Abschlussrapporte, Vorher-/Nachher-Fotovorschau, Suche sowie Filter zusammen. Der Standortfilter unterstützt eine einzelne Filiale oder alle Filialen der zugeordneten Firma. Standortbezogene Kontakt- und Zutrittshinweise bleiben verfügbar.
+
+Die Projekt-/Filialkarten im Dashboard verlinken direkt auf die jeweilige Gebäudeakte; «Alle Gebäudeakten ansehen» öffnet die Gesamtübersicht. Die bisherigen Daten bleiben in den zentral gespeicherten Aufträgen und Rapporten, es entsteht **keine zweite Datenhaltung**. Die bestehenden serverseitigen Rollen-/Mandantenrechte und Workflows werden nicht geändert.
+
+Der getrennte **Superadmin-Projektstand** ist ein internes Entwicklungs-/Prüfmodul und keine zweite Kunden-Gebäudeakte.
+
 ## Ausführungsteam
 
 Mitarbeiter gehören zum ausführenden Bauunternehmen und starten in einer eigenen kundenübergreifenden Einsatzübersicht. Sie sehen freigegebene Arbeiten aller Kunden und das Archiv erledigter Arbeiten samt Rapporten, Stunden, Vorher-/Nachher-Fotos und Druckansicht. Ungeprüfte oder abgelehnte Meldungen bleiben ausgeschlossen. Filter: Kunde, Filiale, Priorität, Suche und Ansichten für offene/ausgeführte Arbeiten bzw. Rapporte. Abschliessen bleibt ausschliesslich bei freigegebenen Arbeiten möglich; erledigte Rapporte sind lesbar, aber nicht erneut abschliessbar. Kundendesign und Unternehmensverwaltung werden in dieser Ansicht nicht übernommen.

@@ -6,7 +6,7 @@ const demo=fs.readFileSync('public/demo.js','utf8');
 const employee=fs.readFileSync('public/employee.js','utf8');
 const map=fs.readFileSync('public/employee-map.js','utf8');
 
-// The role selector must preserve GitHub Pages' /facility-management/ path.
+// The PUBLIC demo may only expose manager and branch; the internal employee module remains tested separately.
 const selector="banner.querySelector('select').onchange=e=>";
 const from=demo.indexOf(selector);
 assert(from!==-1,'Demo role selector must exist');
@@ -18,10 +18,13 @@ let navigated='';
 const input='https://example.github.io/facility-management/demo.html?role=manager';
 const routing={banner:{querySelector:()=>select},URL,location:{href:input,assign:(href)=>{navigated=href}}};
 vm.runInNewContext(snippet,routing);
-select.onchange({target:{value:'employee'}});
+select.onchange({target:{value:'branch'}});
 assert.equal(new URL(navigated).pathname,'/facility-management/demo.html');
-assert.equal(new URL(navigated).searchParams.get('role'),'employee');
-assert(demo.includes('href="?role=employee"'),'Direct employee test entry must be available');
+assert.equal(new URL(navigated).searchParams.get('role'),'branch');
+assert.match(demo,/roles=\{manager:'Manager',branch:'Filialleiter'\}/,'Public choices must exclude internal staff');
+assert.match(demo,/const chosen=roles\[role\]\?role:'manager'/,'Invalid roles fall back to manager');
+assert(!demo.includes('href="?role=employee"'),'Public employee entry must be hidden');
+assert(!demo.includes('demo-carglass')&&!demo.includes('Carglass'),'No real customer reference in public demo');
 
 function renderEmployee(role='employee'){
  const fixture=String.raw`
@@ -63,4 +66,4 @@ assert.doesNotMatch(shown.today,/Morgen geplante Arbeit/,'Today plan excludes to
 assert.match(shown.tomorrow,/Morgen geplante Arbeit/,'Date picker can open future day');
 assert.doesNotMatch(shown.tomorrow,/Überfälliger Einsatz/,'Future day is scoped to its own tasks');
 assert.match(shown.nextWeek,/Nächste Woche geplant/,'Next-week navigation shows selected week');
-console.log('PASS: employee route, jobs, overdue/future day, next week and reports');
+console.log('PASS: public role selector exposes only manager/branch; internal employee portal module still passes standalone planning tests');

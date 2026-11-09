@@ -6,9 +6,9 @@ Webbasierte Plattform für Gebäudeunterhalt über mehrere Kunden und Filialen. 
 
 ## Einstieg
 
-- `/`: Landingpage mit Mehrwert, Funktionen, Ablauf, Rollen, Demo und Anmelde-Einstieg.
-- `/dashboard`: eigentliche Plattform mit Anmeldung und zentralen Daten.
-- `/demo.html`: klar gekennzeichnete, isolierte Browserdemo mit drei Beispiel-Filialen und vier auswählbaren Rollen. Keine Live-API-Zugriffe; eigene Demo-Speicherschlüssel. Beispielbilder sind Gebäudeillustrationen. Zurücksetzen betrifft nur Demodaten.
+- **Öffentliche GitHub-Pages-Adresse**: ausschliesslich die statische, neue Soft-Glossy-Informations-Landingpage. Der Pages-Workflow liefert nur `index.html`, `landing.css`, `404.html` und `.nojekyll` aus. Öffentliche Demo- und App-Dateien werden dort nicht mehr veröffentlicht; alte Demo-Pfade ergeben eine 404.
+- **Private App**: `/dashboard` ist eine separate, geschützte Anwendung und darf erst nach Authentifizierung, Berechtigungsprüfung und Betriebsfreigabe auf dem späteren App-Host erreichbar sein.
+- Die internen Browser-Demos und Programmdateien verbleiben vorerst im GitHub-Projekt zu Entwicklungs-/Testzwecken. **Da das Repository derzeit öffentlich ist, sind diese Quellen über GitHub selbst weiterhin abrufbar.** Der Pages-Dateifilter ersetzt keinen privaten Quellcode-Speicher. Für echten Code-/Kopierschutz muss die Entwicklungs-App in ein privates Repository und die öffentliche Landingpage in ein separates Marketing-Repository. Sichtbare Webseiteninhalte lassen sich technisch nicht vollständig gegen Kopieren schützen.
 - Superadmin-Menü **Projektstand**: aktueller Funktionsstand, nachgewiesene Prüfungen, aufklappbarer Morgenrundgang mit erwarteten Ergebnissen und verständliche Hilfe bei typischen Fehlern.
 - `PRUEFSTAND.md`: vollständiger Morgenrundgang und Ergebnisse; `BETRIEB.md`: konkrete Betriebsvorbereitung mit offenen Arbeiten und Abschlussnachweisen.
 

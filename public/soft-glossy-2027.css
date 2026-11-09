@@ -673,3 +673,27 @@ main.customer-ambience .workspace-top .customer-brand-banner > .ambience-actions
     justify-content:center;
   }
 }
+
+/*
+ * The large brand banner is now the visible customer title.
+ * Keep the platform/admin title unchanged and retain a visually hidden
+ * semantic H1 inside the customer banner for screen readers.
+ */
+body.company-workspace main.customer-ambience > .title-row{
+  display:none;
+}
+main.customer-ambience .workspace-top .workspace-identity.customer-brand-banner{
+  position:relative;
+}
+main.customer-ambience .workspace-top .customer-brand-banner > .customer-brand-heading{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  clip-path:inset(50%);
+  white-space:nowrap;
+  border:0;
+}

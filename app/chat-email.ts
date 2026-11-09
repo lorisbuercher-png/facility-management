@@ -62,7 +62,7 @@ export function buildChatEmail(config:ChatEmailConfig,input:ChatEmailInput){
     '<h1 style="font-size:24px;margin:15px 0">Neue Chatnachricht</h1>'+
     '<p>'+safeHtml(description)+'</p>'+
     '<p>Die Nachricht ist ausschliesslich im geschützten Kundenchat verfügbar.</p>'+
-    (url?'<p><a style="display:inline-block;background:#7566f4;color:#fff;text-decoration:none;padding:12px 18px;border-radius:12px" href="'+safeHtml(url)+'">Kundenchat öffnen</a></p>':'')+
+    (url?'<p><a style="display:inline-block;background:#7566f4;color:#fff;text-decoration:none;padding:12px 18px;border-radius:12px" href="'+safeHtml(url)+'">Facility-Dashboard öffnen</a></p>':'')+
     '<p style="color:#778297;font-size:12px">Automatische Benachrichtigung · Bitte im Kundenchat antworten.</p></div>';
   return {subject,text,html};
 }

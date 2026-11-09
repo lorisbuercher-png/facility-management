@@ -3,7 +3,7 @@
 :root{
   color-scheme:light;
   --ink:#27324b;--muted:#78849c;--violet:#7f6af0;--violet-strong:#7360df;
-  --line:#e8eaf4;--white:#fff;
+  --line:#e8eaf4;--white:#fff;--fb-yellow:#f5cf55;
   --shadow:0 22px 55px rgba(66,68,117,.075),0 3px 13px rgba(47,51,90,.025);
 }
 *{box-sizing:border-box}
@@ -36,8 +36,8 @@ h1,h2,h3,p{overflow-wrap:break-word}
 .brand{display:flex;align-items:center;gap:12px;min-width:0}
 .brand-icon{
   display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;padding:7px;
-  background:linear-gradient(145deg,#9c8cf7,#806eeb 65%,#ce8fb9);color:#fff;
-  border-radius:14px;box-shadow:0 7px 16px rgba(119,99,209,.23),inset 0 1px rgba(255,255,255,.6);
+  background:linear-gradient(145deg,#ffe78a,#efc74c 65%,#e4b53c);color:#314053;
+  border-radius:14px;box-shadow:0 7px 16px rgba(184,143,45,.17),inset 0 1px rgba(255,255,255,.68);
 }
 .brand-type{display:flex;flex-direction:column;gap:5px;line-height:1}
 .brand-type strong{font-size:17px;letter-spacing:-.03em;font-weight:800}
@@ -67,6 +67,7 @@ h1,h2,h3,p{overflow-wrap:break-word}
   background-clip:text;-webkit-background-clip:text;color:transparent;
 }
 .hero-intro{max-width:535px;font-size:16px;line-height:1.82;color:#737f96;margin:0 0 30px}
+.hero-intro strong{color:#3d4863;font-weight:750}
 .hero-buttons{display:flex;flex-wrap:wrap;gap:12px}
 .button{
   display:inline-flex;align-items:center;justify-content:center;gap:19px;
@@ -96,7 +97,7 @@ h1,h2,h3,p{overflow-wrap:break-word}
   pointer-events:none;
 }
 .scene-heading{display:flex;gap:9px;align-items:center;padding:0 11px;font-size:9px;font-weight:850;letter-spacing:.17em;color:#a0a0ba}
-.scene-heading-dot{width:7px;height:7px;background:#9f8ce6;border-radius:50%;box-shadow:0 0 0 4px #e9e4fd}
+.scene-heading-dot{width:7px;height:7px;background:#e5ba49;border-radius:50%;box-shadow:0 0 0 4px #fff1c6}
 .scene-symbol{margin-left:auto;font-size:21px;font-weight:500;color:#b6a7ec}
 .building-art{position:relative;width:100%;height:auto;min-height:270px;max-height:415px}
 .scene-bottom{display:flex;justify-content:space-between;gap:10px;align-items:center;border-top:1px solid #e9e9f2;padding:11px 12px 0;color:#959ab0;font-size:10px}
@@ -111,7 +112,7 @@ h1,h2,h3,p{overflow-wrap:break-word}
 .scene-note small{display:block;font-size:9px;color:#9098af;margin-top:4px;white-space:nowrap}
 .note-icon{flex:0 0 35px;width:35px;height:35px;border-radius:11px;display:grid;place-items:center;font-size:19px;font-weight:700}
 .note-rose{background:#fce8ec;color:#d98694}
-.note-purple{background:#eeeaff;color:#8c79d5}
+.note-purple{background:#fff0c5;color:#ac832d}
 .note-green{background:#e5f4eb;color:#6ba889}
 .scene-note-report{left:-2px;top:87px}
 .scene-note-team{right:-15px;top:235px}

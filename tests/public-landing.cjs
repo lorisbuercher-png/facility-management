@@ -7,7 +7,7 @@ const workflow=fs.readFileSync('.github/workflows/demo-pages.yml','utf8');
 assert.match(html,/<!doctype html>/i);
 assert.match(html,/<html lang="de-CH">/);
 assert.match(html,/Gebäudeunterhalt/);
-assert.match(html,/Klar organisiert/);
+assert.match(html,/Sauber ausgeführt/);
 assert.match(html,/Content-Security-Policy/);
 assert.match(html,/script-src 'none'/);
 assert.match(html,/connect-src 'none'/);
@@ -29,9 +29,21 @@ assert.equal((html.match(/class="process-card"/g)||[]).length,4,'Four-step maint
 assert.match(html,/id="gebaeudeakte"/,'Building record section');
 assert.match(html,/Management/);
 assert.match(html,/Filialleitung/);
-assert.match(html,/Disposition &amp; Teams/);
+assert.match(html,/FB Spezialbau &amp; Fachteams/);
 assert.match(html,/Symbolische Illustration|Schematische Darstellung/,'Graphic states it is illustrative');
 assert.match(html,/Pilotbetrieb/,'Do not claim unfinished features are already operating');
+
+assert.match(html,/<strong>FB SPEZIALBAU<\/strong>/,'FB Spezialbau must be the visible site brand');
+assert.match(html,/FB Spezialbau übernimmt die Ausführung/,'Contractor, not customer, performs the work');
+assert.match(html,/KUNDE · FILIALLEITUNG/,'Customer initiates defect reports');
+assert.match(html,/KUNDE · MANAGEMENT/,'Customer approves jobs');
+assert.match(html,/FB SPEZIALBAU · DISPOSITION/,'Execution contractor distributes jobs');
+assert.match(html,/FB SPEZIALBAU · FACHTEAM/,'Execution team documents work');
+assert.match(html,/Sie beauftragen/,'Customer-contractor roles are clearly differentiated');
+assert.match(html,/Malerarbeiten/,'Concrete trade illustration remains visible');
+assert.match(html,/info@fb-spezialbau\.ch/,'FB Spezialbau is the contact recipient');
+assert.match(html,/nicht|Vorbereitung/,'Unfinished pilot features must not be advertised as operational');
+
 
 assert.equal((css.match(/\{/g)||[]).length,(css.match(/\}/g)||[]).length,'CSS braces must balance');
 assert(css.includes('.hero-scene')&&css.includes('.building-art')&&css.includes('.benefit-grid')&&css.includes('.process-grid'),'Maintenance layout styling');
@@ -42,4 +54,4 @@ assert.match(workflow,/copyfile\(source \/ "landing\.html", target \/ "index\.ht
 assert.match(workflow,/copyfile\(source \/ "landing\.css", target \/ "landing\.css"\)/);
 assert.match(workflow,/expected = \{"\.nojekyll", "index\.html", "landing\.css", "404\.html"\}/);
 assert.match(workflow,/\(target \/ "404\.html"\)\.write_text/);
-console.log('PASS: static maintenance-product landing, inline building artwork, four-step workflow, trade teams, building dossier, mobile design and public-only deploy');
+console.log('PASS: FB Spezialbau executing-contractor identity, customer approval and reporting, illustrated trade workflow, privacy-safe static landing');

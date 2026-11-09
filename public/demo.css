@@ -1,3 +1,8 @@
 .demo-mode-banner{margin-left:var(--sidebar);padding:15px 30px;background:#fff4dd;border-bottom:1px solid #ead5a9;display:flex;gap:18px;align-items:center;flex-wrap:wrap;color:#6f5733;position:relative;z-index:1}.demo-mode-banner>div{flex:1;min-width:220px}.demo-mode-banner strong{display:block;font-size:13px}.demo-mode-banner span{display:block;font-size:11px;line-height:1.7;margin-top:5px;color:#88714f}.demo-mode-banner label{font-size:10px;display:flex;gap:8px;align-items:center;color:#7c6440}.demo-mode-banner select{margin:0;min-height:44px;background:#fffdf6;border-color:#e5d4b1;color:#6f5733}.demo-mode-banner a{font-size:11px;color:#6f5733;text-decoration:none}.demo-mode-banner button{background:#fffdf6;border-color:#e5d4b1;color:#6f5733}#cloud-status{display:none}@media(max-width:720px){.demo-mode-banner{margin-left:0;padding:14px 18px;gap:10px}.demo-mode-banner>div{flex-basis:100%}.demo-mode-banner label{flex:1}.demo-mode-banner select{width:100%;font-size:13px}.demo-mode-banner span{font-size:10px}.demo-mode-banner a{font-size:10px}.demo-mode-banner button{font-size:10px}}
 
 .demo-loading .sidebar,.demo-loading .app-topbar,.demo-loading main{visibility:hidden;pointer-events:none}.demo-loading .demo-mode-banner:after{content:'Demo wird geladen …';font-size:11px;color:#88714f}
+
+/* The demo brand is a keyboard-accessible link to the public information page. */
+.sidebar a.brand{display:flex;color:inherit;text-decoration:none;cursor:pointer}
+.sidebar a.brand:hover{opacity:.88}
+.sidebar a.brand:focus-visible{outline:3px solid #806fea;outline-offset:6px;border-radius:12px}

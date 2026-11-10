@@ -541,3 +541,188 @@ h1,h2,h3,p{overflow-wrap:break-word}
   .site-header .brand-type small{font-size:6.5px;letter-spacing:.06em}
   .site-header .brand-type em{font-size:7px}
 }
+
+
+/*
+ * OSCD / Onsite Control Desk – approved mockup 2 colorway.
+ * Color-only layer: the landing-page layout, text, functional descriptions,
+ * DOM structure and responsive breakpoints are unchanged.
+ *
+ * Brand yellow: #FDC500 | Graphite: #20252D | Clean white: #FFFFFF
+ * Use near-black text on yellow to ensure legible controls.
+ */
+:root{
+  --oscd-yellow:#fdc500;
+  --oscd-yellow-hover:#edb900;
+  --oscd-graphite:#20252d;
+  --oscd-ink:#26303b;
+  --oscd-grey:#68727d;
+  --oscd-paper:#f7f8f9;
+  --oscd-warm:#fff8de;
+  --violet:var(--oscd-yellow);
+  --violet-strong:var(--oscd-yellow-hover);
+  --ink:var(--oscd-ink);
+  --muted:var(--oscd-grey);
+  --line:#e5e8eb;
+}
+body{
+  color:var(--oscd-ink);
+  background:
+    radial-gradient(ellipse 850px 580px at 0% 4%,rgba(253,197,0,.09),transparent 72%),
+    radial-gradient(ellipse 730px 530px at 100% 20%,rgba(37,46,58,.035),transparent 74%),
+    radial-gradient(ellipse 700px 460px at 0% 75%,rgba(253,197,0,.045),transparent 75%),
+    var(--oscd-paper);
+}
+.ambient-left{background:rgba(253,197,0,.07)}
+.ambient-right{background:rgba(45,51,59,.045)}
+a:focus-visible{outline-color:#9b7600}
+.site-header{
+  border-color:#e5e8ec;
+  background:rgba(255,255,255,.98);
+  box-shadow:0 10px 35px rgba(32,37,45,.085);
+}
+.brand-icon{
+  color:var(--oscd-graphite);
+  background:linear-gradient(145deg,#ffe15c,var(--oscd-yellow) 67%,#edb500);
+  box-shadow:0 7px 16px rgba(189,142,0,.16),inset 0 1px rgba(255,255,255,.66);
+}
+.site-header .brand-type strong{color:var(--oscd-graphite)}
+.site-header .brand-type small{color:#68717a}
+.site-header .brand-type em{color:#717983}
+.site-nav{color:#4b5662}
+.site-nav>a:not(.nav-contact):hover{color:#936e00}
+.site-nav .nav-contact{
+  color:var(--oscd-graphite);
+  background:linear-gradient(130deg,#ffdb46,var(--oscd-yellow));
+  border-color:#eabc00;
+  box-shadow:0 7px 18px rgba(185,145,0,.17);
+}
+.eyebrow,.overline{color:#8a6a00}
+.status-dot{background:var(--oscd-yellow);box-shadow:0 0 0 5px #fff2bb}
+.gradient-title{
+  background:linear-gradient(96deg,#e1ab00 2%,#fdc500 52%,#ce9b00 98%);
+  background-clip:text;-webkit-background-clip:text;color:transparent;
+}
+.hero-intro{color:#65707d}
+.hero-intro strong{color:var(--oscd-graphite)}
+.button-primary{
+  color:var(--oscd-graphite);
+  background:linear-gradient(120deg,#ffdc48,var(--oscd-yellow));
+  box-shadow:0 10px 23px rgba(177,134,0,.17),inset 0 1px rgba(255,255,255,.5);
+}
+.button-primary:hover,.site-nav .nav-contact:hover{background:var(--oscd-yellow-hover)}
+.button-light{
+  color:var(--oscd-graphite);
+  background:#fff;
+  border-color:#e1e4e7;
+}
+.hero-audience,.trust-strip span{color:#65717f}
+.hero-audience .tick,.trust-strip i{color:#9a7700}
+.hero-scene .scene-halo,.scene-halo{border-color:rgba(162,143,58,.18)}
+.hero-scene .scene-frame{
+  background:rgba(255,255,255,.99);
+  border-color:#fff;
+  box-shadow:0 22px 55px rgba(39,43,52,.11);
+}
+.hero-scene .scene-heading{color:#74808d}
+.hero-scene .scene-heading-dot{
+  background:var(--oscd-yellow);
+  box-shadow:0 0 0 4px #fff1b8;
+}
+.hero-scene .scene-symbol{color:#cea600}
+.hero-scene .service-image-icon{color:var(--oscd-graphite);background:#ffe68c}
+.hero-scene .scene-note{box-shadow:0 11px 25px rgba(35,44,56,.12)}
+.hero-scene .note-rose{color:#987100;background:#fff1c6}
+.hero-scene .note-purple{color:#a07b00;background:#ffefb8}
+.hero-scene .note-yellow{color:#a37b00;background:#fff0c0}
+.hero-scene .note-green{color:#477965;background:#e8f3e8}
+.hero-scene .scene-ok{color:#557a67}
+.section-kicker,.benefit-number,.process-owner{color:#838a91}
+.section-heading>p{color:#6d7682}
+.benefit-card{
+  border-color:#fff;
+  box-shadow:0 15px 35px rgba(37,43,49,.055);
+}
+.tone-blue{background:linear-gradient(148deg,#fff 0%,#fff9e9 100%)}
+.tone-pink{background:linear-gradient(148deg,#fff 0%,#f9f9f9 100%)}
+.tone-mint{background:linear-gradient(148deg,#fff 0%,#fff9e7 100%)}
+.benefit-icon,.tone-pink .benefit-icon,.tone-mint .benefit-icon{
+  background:#fff5cd;color:#927200;
+  box-shadow:0 7px 15px rgba(86,73,29,.08);
+}
+.mini-building{background:linear-gradient(135deg,#ffdf71,#ebc343)}
+.mini-building.second{background:linear-gradient(145deg,#b3bac3,#7d8a99)}
+.mini-building.third{background:linear-gradient(145deg,#e9edf1,#aab5c0)}
+.mini-building span{background:rgba(255,255,255,.75)}
+.assignment-symbol,.assignment-symbol.is-purple,.assignment-symbol.is-green{
+  color:#947000;background:#fff9e5;
+  box-shadow:0 8px 20px rgba(130,98,0,.10);
+}
+.assignment-symbol.is-green{color:#567b65;background:#edf6ef}
+.assignment-dash{background:#d9bf69}
+.mini-report{background:#fff}
+.report-mark{background:#fff1c0;color:#997400}
+.mini-report i{background:#dde2e5}
+.report-image{background:#e7edf1;color:#53687b}
+.process-card{
+  background:rgba(255,255,255,.97);
+  border-color:#e7e9ec;
+  box-shadow:0 6px 19px rgba(36,43,53,.045);
+}
+.process-card:not(:last-child):after{color:#a47b00;box-shadow:0 3px 12px rgba(70,56,12,.09)}
+.process-number{color:#c29a18}
+.process-rose,.process-blue,.process-purple{
+  background:#fff4d0;color:#9e7800;
+}
+.process-green{background:#e9f5ed;color:#5e9571}
+.process-card p{color:#687583}
+.dossier{
+  border-color:#fff;
+  background:linear-gradient(120deg,rgba(255,255,255,.96),rgba(255,249,233,.85));
+  box-shadow:0 20px 50px rgba(45,46,51,.06);
+}
+.dossier-text>p:not(.overline){color:#65717e}
+.dossier-points{color:#576573}
+.dossier-points i{color:#9d7900}
+.dossier-graphic{
+  border-color:#e7e9ec;
+  box-shadow:0 15px 35px rgba(33,39,47,.075);
+}
+.dossier-chip{color:#8e6c00}
+.dossier-top-icon{color:#907000;background:#fff1c2}
+.timeline-dot.dot-rose{background:#e6b700}
+.timeline-dot.dot-purple{background:#c49a0a}
+.timeline-dot.dot-green{background:#6aab80}
+.timeline-row{color:#5c6774}
+.timeline-status{color:#8c6c00;background:#fff4cc}
+.timeline-status.finished{color:#4e8666;background:#e9f4ed}
+.dossier-summary span{background:#f4f5f5;color:#5c6874}
+.dossier-summary span:nth-child(2){background:#fff1c9;color:#8c6800}
+.dossier-summary span:nth-child(3){background:#e7f3eb;color:#4f8869}
+.role-card{border-color:#e7eaee;box-shadow:0 7px 20px rgba(41,47,55,.035)}
+.role-bubble-blue,.role-bubble-pink,.role-bubble-purple{
+  color:#916e00;background:#fff2c7;
+}
+.role-card p{color:#687481}
+.contact{
+  color:#fff;
+  background:linear-gradient(115deg,#20252d 0%,#2b333e 62%,#38404a 100%);
+  box-shadow:0 20px 50px rgba(32,37,45,.18);
+}
+.contact-blur{
+  background:radial-gradient(circle,rgba(253,197,0,.17),transparent 72%);
+}
+.contact-overline{color:#ffdf69}
+.contact-copy>p:last-child{color:#dce1e6}
+.contact-button{
+  color:var(--oscd-graphite);
+  background:linear-gradient(120deg,#ffe059,var(--oscd-yellow));
+  box-shadow:0 8px 24px rgba(0,0,0,.2);
+}
+.contact-button:hover{background:var(--oscd-yellow-hover)}
+.footer{color:#818b95}
+.footer a{color:#8f6d00}
+@media(prefers-contrast:more){
+  .gradient-title{background:none;color:#947100}
+  .button-primary,.contact-button,.site-nav .nav-contact{color:#12171f}
+}

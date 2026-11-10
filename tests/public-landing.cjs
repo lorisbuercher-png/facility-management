@@ -22,10 +22,17 @@ assert(!/(demo\.html|\/dashboard|carglass|lorisbuercher\.chatgpt\.site|\/api\/|l
 const links=[...html.matchAll(/href="([^"]+)"/g)].map(m=>m[1]);
 assert(links.every(link=>link.startsWith('#')||link.startsWith('mailto:')||link==='landing.css'),'Only same-page links, mailto and local stylesheet');
 assert(!/\b(?:https?:)?\/\//i.test(html.replace(/<!doctype[^>]*>/i,'')),'No third-party resources');
-has(/<strong>FB SPEZIALBAU<\/strong>/,'FB Spezialbau identity');
+has(/<strong>OSCD<\/strong>/,'OSCD is the main visible product brand');
+has(/<small>ONSITE CONTROL DESK<\/small>/,'OSCD is expanded as Onsite Control Desk');
+has(/<em>Ein Produkt der FB Spezialbau<\/em>/,'Correct attribution to the producing company');
 
 // Commercial promise is grounded in the actual modules and customer roles.
 has(/Facility Management für Filialunternehmen/,'Position software for multi-site business');
+has(/<title>OSCD – Onsite Control Desk/,'Browser title reflects OSCD');
+has(/© 2026 OSCD · Onsite Control Desk/,'Footer leads with OSCD');
+has(/Ein Produkt der FB Spezialbau/,'FB Spezialbau is identified as the product company');
+assert.equal((html.match(/subject=Pilotgespraech%20OSCD/g)||[]).length,2,'Both acquisition links mention the OSCD product');
+assert(css.includes('.site-header .brand-type em{'),'Header product ownership attribution is styled');
 has(/Weniger Aufwand/,'Lead with customer benefit');
 has(/Mehr Überblick/,'Lead with multi-site visibility');
 has(/Dashboard/,'Dashboards exist');
@@ -47,7 +54,7 @@ assert.match(employee,/Rapport & Abschluss|Rapport &amp; Abschluss|Rapport/,'Sta
 // Product workflow uses real status values instead of inventing progress states.
 has(/class="service-image"/,'Commercial-property illustration replaces cartoon building');
 has(/src="facility-building\.png"/,'Approved generic local visual must load');
-has(/GEBÄUDEUNTERHALT MIT FB SPEZIALBAU/,'Facility services are visible in graphic');
+has(/OSCD · GEBÄUDEUNTERHALT/,'OSCD and facility services are visible in illustration');
 has(/Manager gibt frei/,'Hero illustrates customer approval');
 has(/<strong>Arbeit dokumentiert<\/strong>/,'Hero illustrates completed work');
 has(/Gemeldet<\/span><span>Freigegeben<\/span><span>Erledigt/,'Actual persisted statuses represented');
@@ -62,7 +69,7 @@ has(/<h3>FB Spezialbau &amp; Ausführung<\/h3>/,'Execution provider distinct');
 
 // Conversion without inventing launch readiness, customers, pricing or results.
 assert((html.match(/Pilotgespräch anfragen/g)||[]).length>=2,'A clear top and bottom acquisition CTA');
-has(/mailto:info@fb-spezialbau\.ch\?subject=Pilotgespraech%20Facility%20Management/,'Pilot lead goes to real business inbox');
+has(/mailto:info@fb-spezialbau\.ch\?subject=Pilotgespraech%20OSCD%20Onsite%20Control%20Desk/,'OSCD sales lead goes to the existing FB Spezialbau business inbox');
 has(/Pilotbetrieb vorbereitet/,'Pilot status is transparent');
 has(/noch nicht produktiv freigegeben/,'Unfinished automatic mail assignment not sold as live');
 assert(!/garantiert|100\s*%|CHF\s*\d|\d+\s*(?:zufriedene Kunden|Standorte live)/i.test(html),'No invented guarantees, prices or adoption metrics');

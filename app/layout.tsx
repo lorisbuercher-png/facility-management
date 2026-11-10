@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Starter Project",
-  description: "A clean starting point for building your site.",
+  title: "OSCD – Onsite Control Desk",
+  description: "OSCD – Onsite Control Desk, ein Produkt der FB Spezialbau. Die Facility-Management-Plattform für Standorte, Mängel, Freigaben und dokumentierte Unterhaltsarbeiten.",
   other: {
     "codex-preview": "development",
   },
@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="de-CH">
       <body className="antialiased">{children}</body>
     </html>
   );

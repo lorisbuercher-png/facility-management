@@ -1,12 +1,13 @@
 > GitHub-Export: Beginne mit **GITHUB_START.md**. Die Sites-Hinweise unten beschreiben die bisherige Installation.
 
-# Facility Management
+# OSCD – Onsite Control Desk
 
-Webbasierte Plattform für Gebäudeunterhalt über mehrere Kunden und Filialen. Deutsche Oberfläche, Schweizer Schreibweise. Aktueller Stand: private Entwicklungs- und Prüfversion; keine pauschale Freigabe für den produktiven Kundenbetrieb.
+**OSCD ist ein Produkt der FB Spezialbau.** Webbasierte Facility-Management-Plattform für Gebäudeunterhalt über mehrere Kunden und Filialen. Deutsche Oberfläche, Schweizer Schreibweise. Aktueller Stand: private Entwicklungs- und Prüfversion; keine pauschale Freigabe für den produktiven Kundenbetrieb.
 
 ## Einstieg
 
-- **Öffentliche GitHub-Pages-Adresse**: ausschliesslich die statische, neue Soft-Glossy-Informations-Landingpage. Der Pages-Workflow liefert nur `index.html`, `landing.css`, `404.html` und `.nojekyll` aus. Öffentliche Demo- und App-Dateien werden dort nicht mehr veröffentlicht; alte Demo-Pfade ergeben eine 404.
+- **Öffentliche GitHub-Pages-Adresse**: ausschliesslich die statische OSCD-Informations-Landingpage. Der Pages-Workflow liefert nur `index.html`, `landing.css`, `facility-building.png`, `404.html` und `.nojekyll` aus. Öffentliche Demo- und App-Dateien werden dort nicht mehr veröffentlicht; alte Demo-Pfade ergeben eine 404.
+- **Neue, gekaufte Domain:** `oscd.ch` soll die Landingpage erhalten. **Domain-/DNS-/HTTPS-Verknüpfung ist noch nicht geprüft bzw. bestätigt.** Einrichtung siehe [`OSCD-DOMAIN.md`](OSCD-DOMAIN.md).
 - **Private App**: `/dashboard` ist eine separate, geschützte Anwendung und darf erst nach Authentifizierung, Berechtigungsprüfung und Betriebsfreigabe auf dem späteren App-Host erreichbar sein.
 - Die internen Browser-Demos und Programmdateien verbleiben vorerst im GitHub-Projekt zu Entwicklungs-/Testzwecken. **Da das Repository derzeit öffentlich ist, sind diese Quellen über GitHub selbst weiterhin abrufbar.** Der Pages-Dateifilter ersetzt keinen privaten Quellcode-Speicher. Für echten Code-/Kopierschutz muss die Entwicklungs-App in ein privates Repository und die öffentliche Landingpage in ein separates Marketing-Repository. Sichtbare Webseiteninhalte lassen sich technisch nicht vollständig gegen Kopieren schützen.
 - Superadmin-Menü **Projektstand**: aktueller Funktionsstand, nachgewiesene Prüfungen, aufklappbarer Morgenrundgang mit erwarteten Ergebnissen und verständliche Hilfe bei typischen Fehlern.

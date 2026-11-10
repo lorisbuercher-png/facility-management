@@ -43,6 +43,9 @@ jobs:
           # sources, tenant data, internal images or API implementation.
           shutil.copyfile(source / "landing.html", target / "index.html")
           shutil.copyfile(source / "landing.css", target / "landing.css")
+          # Only the existing generic building illustration is permitted publicly.
+          # No actual location, customer logo, or application screenshots.
+          shutil.copyfile(source / "assets" / "property-cover.png", target / "facility-building.png")
 
           # Old demo URLs must never fall through to the application.
           # GitHub Pages serves this inert page with HTTP 404.
@@ -61,10 +64,11 @@ jobs:
           (target / "404.html").write_text(page, encoding="utf-8")
           (target / ".nojekyll").touch()
 
-          expected = {".nojekyll", "index.html", "landing.css", "404.html"}
+          expected = {".nojekyll", "index.html", "landing.css", "facility-building.png", "404.html"}
           actual = {p.name for p in target.rglob("*") if p.is_file()}
           assert actual == expected, "Unexpected files in public deployment: " + repr(actual)
           published = (target / "index.html").read_text(encoding="utf-8").lower()
+          assert 'src="facility-building.png"' in published, "Expected approved facility visual is missing"
           for forbidden in ["demo.html", "carglass", "<script", "<form", "/api/", "signin", "auth_token"]:
             assert forbidden not in published, "Unexpected public content: " + forbidden
           print("PASS: marketing-only deployment; no demo, JS, customer assets or API code")

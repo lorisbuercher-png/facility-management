@@ -500,3 +500,44 @@ h1,h2,h3,p{overflow-wrap:break-word}
   .hero-scene .scene-bottom{font-size:8px}
   .hero-scene .scene-caption{display:none}
 }
+
+
+/* OSCD is the product brand. FB Spezialbau remains clearly identified as the
+   company behind the product without competing with the product wordmark. */
+.site-header .brand-type{
+  gap:3px;
+  min-width:0;
+}
+.site-header .brand-type strong{
+  color:#202f47;
+  font-size:clamp(23px,2.15vw,29px);
+  font-weight:860;
+  line-height:1.05;
+  letter-spacing:-.045em;
+}
+.site-header .brand-type small{
+  font-size:9px;
+  font-weight:750;
+  color:#687890;
+  letter-spacing:.14em;
+  line-height:1.25;
+  white-space:nowrap;
+}
+.site-header .brand-type em{
+  font-size:9px;
+  font-weight:550;
+  font-style:normal;
+  color:#8690a6;
+  line-height:1.25;
+  white-space:nowrap;
+}
+@media(max-width:660px){
+  .site-header .brand-type{gap:2px}
+  .site-header .brand-type strong{font-size:21px}
+  .site-header .brand-type small{font-size:7px;letter-spacing:.10em}
+  .site-header .brand-type em{font-size:7.5px}
+}
+@media(max-width:355px){
+  .site-header .brand-type small{font-size:6.5px;letter-spacing:.06em}
+  .site-header .brand-type em{font-size:7px}
+}

@@ -733,3 +733,68 @@ a:focus-visible{outline-color:#9b7600}
 .hero-photo-integrated .scene-note,
 .hero-photo-integrated .service-image-label{display:none}
 .hero-photo-integrated .service-image>img{object-position:50% 50%}
+
+/*
+ * Mobile viewport containment (OSCD landing).
+ * Keep vertical scrolling and native pinch-to-zoom accessible while preventing
+ * wide decorations, flexible header content and status badges from creating
+ * a draggable horizontal canvas on narrow phones.
+ */
+html {
+  width:100%;
+  max-width:100%;
+  overflow-x:clip;
+}
+body {
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  overflow-x:clip;
+}
+*,*::before,*::after{box-sizing:border-box}
+img,video{max-width:100%}
+main,.wrap,.hero,.hero-copy,.hero-scene,.scene-frame,
+.dossier,.dossier-text,.dossier-graphic,.contact,.contact-copy,
+.site-header,.brand,.brand-type,.site-nav,.section-heading,
+.benefit-grid,.process-grid,.role-grid,.timeline,.timeline-row{
+  min-width:0;
+}
+@supports not (overflow:clip){
+  html,body{overflow-x:hidden}
+}
+@media(max-width:660px){
+  .wrap{width:calc(100% - 30px);max-width:calc(100% - 30px)}
+  .site-header{gap:8px;max-width:calc(100% - 30px)}
+  .site-header .brand{min-width:0;flex:1 1 auto;gap:8px}
+  .site-header .brand-type{min-width:0;flex:1 1 auto}
+  .site-header .brand-type small,
+  .site-header .brand-type em{white-space:normal;overflow-wrap:anywhere}
+  .site-nav{flex:0 0 auto;min-width:0;gap:0}
+  .site-nav .nav-contact{white-space:nowrap}
+  .hero{grid-template-columns:minmax(0,1fr)}
+  .hero-scene{max-width:100%;overflow:clip}
+  .hero-scene .scene-frame{min-width:0;max-width:100%}
+  .hero-scene .scene-bottom{min-width:0}
+  .hero-scene .scene-bottom span{min-width:0;overflow-wrap:anywhere}
+  .hero-audience span{white-space:normal}
+  .benefit-grid,.role-grid,.dossier{grid-template-columns:minmax(0,1fr)}
+  .process-grid{max-width:100%}
+  .dossier-top .dossier-chip{min-width:0;overflow-wrap:anywhere}
+  .timeline-row{min-width:0}
+  .timeline-row>div{min-width:0;overflow-wrap:anywhere}
+  .timeline-row .timeline-status{flex:0 1 auto;max-width:42%;white-space:normal;overflow-wrap:anywhere;text-align:center}
+  .contact{min-width:0}
+  .contact .contact-copy,.contact .contact-button{max-width:100%;min-width:0}
+  .footer{min-width:0}
+  .footer>*{max-width:100%;min-width:0;overflow-wrap:anywhere}
+}
+@media(max-width:360px){
+  .site-header{padding-inline:10px}
+  .site-header .brand-icon{width:33px;height:33px;flex-basis:33px}
+  .site-header .brand-type strong{font-size:19px}
+  .site-header .brand-type small{font-size:6.5px;letter-spacing:.06em}
+  .site-header .brand-type em{font-size:7px}
+  .site-nav .nav-contact{font-size:10px;padding:9px 10px}
+  .hero h1{font-size:clamp(34px,10vw,40px)}
+  .dossier-summary span{font-size:8px}
+}

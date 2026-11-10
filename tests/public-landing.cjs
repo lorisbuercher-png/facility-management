@@ -79,6 +79,23 @@ assert(css.includes('.hero-scene')&&css.includes('.service-image')&&css.includes
 assert(css.includes('@media(max-width:400px)'),'Responsive smartphone layout');
 assert(css.includes('prefers-reduced-motion'),'Reduced motion support');
 
+// Approved OSCD image-2 design: preserve the landing-page structure, recolor
+// marketing controls and graphic accents using the FB Spezialbau yellow.
+assert.match(html,/viewBox="0 0 48 48"/,'OSCD twin-bar logo is present');
+assert.match(html,/Mangel gemeldet/,'Graphic reflects real defect reporting');
+assert.match(html,/Manager gibt frei/,'Graphic shows correct manager approval');
+assert.match(html,/Arbeit dokumentiert/,'Graphic shows actual reporting flow');
+assert.match(css,/--oscd-yellow:#fdc500/,'Use approved OSCD yellow (#FDC500)');
+assert.match(css,/--oscd-graphite:#20252d/,'Pair yellow with graphite text');
+assert.match(css,/\.site-nav \.nav-contact\{[^}]*color:var\(--oscd-graphite\);[^}]*background:linear-gradient/,'Header contact control uses contrast-safe yellow');
+assert.match(css,/\.button-primary\{[^}]*color:var\(--oscd-graphite\);[^}]*background:linear-gradient/,'Hero CTA uses contrast-safe yellow');
+assert.match(css,/\.gradient-title\{[^}]*#fdc500/,'Hero branding no longer purple');
+assert.match(css,/\.tone-blue\{background:linear-gradient/,'Card layout preserved with yellow-neutral palette');
+assert.match(css,/\.contact\{[^}]*#20252d/,'Footer sales CTA section uses graphite');
+assert.match(css,/\.contact-button\{[^}]*var\(--oscd-yellow\)/,'Bottom CTA uses brand yellow');
+assert(!html.includes('app.oscd.ch'),'Do not link to a portal hostname before authentication is live');
+
+
 // Visual regression prevention for clipped header, CTA text collisions and
 // unnecessary duplicate benefit rows in the public marketing hero.
 assert(!html.includes('class="trust-strip'),'Hero benefits must not be repeated directly below');
